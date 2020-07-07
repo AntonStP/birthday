@@ -1,0 +1,33 @@
+.scroll-reminders {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("scroll-reminders", $mod){
+      @content;
+    }
+  }
+  pointer-events: all;
+  position: fixed;
+  $w-l: 30px;
+  $h-l: 107.5px;
+  $r-l: 165px;
+  $b-l: 67px;
+  transition: opacity .3s ease-in-out;
+  @include option(right, $r-l, auto);
+  @include option(bottom, $b-l, auto);
+  @include option(width, $w-l, auto);
+  @include option(height, $h-l, auto);
+
+  &_off{
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  @include MOBILE{
+    display: none;
+  }
+
+  svg{
+    width: 100%;
+    height: 100%;
+  }
+}

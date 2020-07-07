@@ -1,0 +1,167 @@
+.winners {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("winners", $mod){
+      @content;
+    }
+  }
+  position: relative;
+  box-sizing: border-box;
+  background: #FAFAFA;
+
+  &__content{
+    position: relative;
+    @include wrapper($wm:$DESIGN-W-M);
+    @include option(padding, 62 0 69, 39 0 54);
+    overflow: hidden;
+
+    @include MOBILE{
+      width: 100vw;
+      overflow: visible;
+      z-index: 4;
+    }
+    @include TABLET{
+      width: 100vw;
+    }
+  }
+
+  &__title {
+    @extend %H2;
+    font-weight: normal;
+    text-align: center;
+    @include option(width, auto, 327);
+    @include MOBILE{
+      letter-spacing: 0.02em;
+      font-weight: 500;
+      text-align: left;
+      margin: 0 auto;
+    }
+  }
+
+  &__carousel{
+    @include option(height, 655, auto);
+    @include option(min-height, 0, 320);
+    @include option(margin, 30 0 0, 25 auto 15);
+    @include option(padding,0, 0 0 2);
+
+    &_mobile{
+      display: none;
+    }
+
+    @include MOBILE{
+      width: 100%;
+      display: block;
+      &_desktop{
+        display: none;
+      }
+    }
+
+    .carousel{
+      height: 100%;
+      @include option(padding, 0 0 0 49, 0);
+      -webkit-mask: linear-gradient(90deg, rgba($WHITE,0), rgba($WHITE,1) 5%, rgba($WHITE,1) 95%, rgba($WHITE,0));
+      @include MOBILE{
+        -webkit-mask: none;
+        mask: none;
+      }
+
+    }
+  }
+
+
+  &__item{
+    flex: 0 1 auto;
+    @include option(width,auto, 143);
+    @include option(margin, 0, 5 3);
+    @include option(min-height, 0, 320);
+    @include option(padding, 0, 10 13 10);
+    box-sizing: border-box;
+    color: $BLACK;
+    text-align: left;
+    height: 49.9%;
+    @include MOBILE{
+      display: inline-flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      height: 100%;
+      background: $WHITE;
+      border-radius: 5px;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.07);
+    }
+  }
+
+  &__item-image{
+    position: relative;
+    display: block;
+    @include option(width, 160, 115);
+    @include option(height, 160, 126);
+    @include option(margin, 0 0 10 -5, 0 auto 12);
+    img{
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      display: block;
+      height: 100%;
+      margin: auto;
+    }
+  }
+
+  &__item-title{
+    @include option(font-size, 18, 12);
+    line-height: 1;
+    @include MOBILE{
+      text-align: left;
+    }
+  }
+  &__item-prize{
+    @include option(font-size, 18, 16);
+    line-height: 1.2;
+    @include option(margin, 8 0 17, 8 0 12);
+    font-weight: bold;
+  }
+  &__item-info{
+    @include option(font-size, 16, 12);
+    line-height: 1.2;
+    width: 70%;
+    @include MOBILE{
+      width: 100%;
+      margin: auto;
+    }
+  }
+
+  &__option {
+    display: flex;
+    align-items: flex-start;
+    //align-items: center;
+    justify-content: flex-start;
+    @include option(margin, 10 0 18, 10 0);
+    @include MOBILE{
+    }
+  }
+  &__option-icon {
+    flex: 0 0 auto;
+    @include option(width,20, 13);
+    @include option(height,20, 13);
+    @include option(margin-right, 10, 8);
+
+    $items: "map", "calendar";
+    @each $item in $items {
+      &_#{$item}{
+        background: image("winners/"+$item+".svg") no-repeat center left / contain;
+      }
+    }
+  }
+
+  &__button{
+    background: $GREEN;
+    @include option(margin, 13 auto 0, 24 auto 0);
+    transition: background .3s ease-in-out;
+    @include HOVER{
+      &:hover{
+        background: #80F85D;
+      }
+    }
+  }
+}

@@ -1,0 +1,213 @@
+.instruction {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("instruction", $mod){
+      @content;
+    }
+  }
+
+
+  @mixin hover {
+    .instruction__item_active &{
+      @content;
+    }
+  }
+
+  position: relative;
+  background: #FFAE35;
+  //overflow: hidden;
+  @include option(margin, -1 0 0);
+
+  &:before{
+    content: "";
+    clear: both;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: image("instruction/top.svg") no-repeat center top / auto 100%;
+    @include option(height, 275, 144);
+  }
+
+  &__content{
+    position: relative;
+    @include wrapper();
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    @include option(padding, 165 0 87, 0 0 53);
+
+    @include MOBILE{
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__video{
+    position: absolute;
+    @include option(top, 62, 0);
+    @include option(bottom, auto, auto);
+    @include option(left, 12, auto);
+    @include option(width, 284, 272);
+    @include option(height, 574, 550);
+    @include option(margin, auto, -96px 5 25 0 );
+    border: none;
+    outline: none;
+    pointer-events: none;
+    box-sizing: border-box;
+
+    @include MOBILE{
+      position: relative;
+    }
+
+    video{
+      position: relative;
+      left: 50%;
+      top: 0;
+      transform: translate(-50%,0%);
+      width: 102%;
+      display: block;
+    }
+  }
+
+
+
+  &__info{
+    flex: 0 1 auto;
+    @include option(width, 375, 343);
+    @include option(margin, 0 23px 0 0, 0);
+
+  }
+
+  &__title{
+    @extend %H2;
+    @include option(margin, 0 0 57, 0 0 38 8);
+    font-weight: 300;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    @include MOBILE{
+      font-weight: 500;
+      letter-spacing: 0.005em;
+    }
+  }
+
+  &__list{
+    @include option(margin, 0 0 42, 0 0 40);
+    @include option(padding, 0, 0 0 0 13);
+  }
+
+  &__item{
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    @include option(padding-bottom, 47, 25);
+
+    &:nth-last-of-type(1){
+      padding-bottom: 0;
+      &:after{
+        display: none;
+      }
+    }
+
+    &:before{
+      position: absolute;
+      content: "";
+      clear: both;
+      display: block;
+      @include option(top, 0);
+      @include option(left, 3);
+      @include option(width, 15);
+      @include option(height, 15);
+      @include option(border-width, 5);
+      background: $RED;
+      border-radius: 50%;
+      z-index: 1;
+      transform: scale(0.5);
+      transition: transform 0.3s;
+    }
+
+    &:after{
+      position: absolute;
+      content: "";
+      clear: both;
+      display: block;
+      box-sizing: border-box;
+      @include option(top, 7);
+      @include option(left, 10);
+      width: 1px;
+      height: 100%;
+      background: $RED;
+    }
+  }
+
+  &__item-index{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    @include option(width, 22, 20);
+    @include option(height, 22, 20);
+    @include option(font-size, 16, 12);
+    @include option(line-height, 22, 20);
+    color: $WHITE;
+    border-radius: 50%;
+    @include option(margin-right, 46, 14);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity .3s ease-in-out, transform .3s ease-in-out;
+    z-index: 1;
+    background: $RED;
+
+    @include hover{
+      transform: scale(1.3);
+      opacity: 1;
+    }
+  }
+
+  &__item-text{
+    @include option(font-size, 18);
+    transition: font-weight .3s ease-in-out;
+    font-weight: normal;
+    line-height: 1;
+    &_desktop{
+      display: block;
+    }
+    &_mobile{
+      display: none;
+    }
+    @include MOBILE{
+      line-height: 1.3;
+      white-space: pre-line;
+      min-height: 2em*1.3;
+      width: 80%;
+      &_desktop{
+        display: none;
+      }
+      &_mobile{
+        display: block;
+      }
+    }
+    @include hover{
+      font-weight: 500;
+    }
+
+    a{
+      text-decoration: none;
+    }
+  }
+
+  &__button{
+    background: $GREEN;
+    @include option(width, 260, 323);
+    transition: background .3s ease-in-out;
+    @include HOVER{
+      &:hover{
+        background: #80F85D;
+      }
+    }
+  }
+}

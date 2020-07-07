@@ -1,0 +1,11 @@
+mixin social-block(content, params)
+  .social-block&attributes(content.attr)&attributes(attributes)
+    .social-block__list
+      +pug-list(content.list, "social-block__item")
+
+
+
+mixin social-block__item(content, params)
+  a.social-block__item&attributes(content.attr)&attributes(attributes)
+    != read(`app/components/project/gui/social-block/svg/${content.soc}.svg`)
+

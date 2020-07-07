@@ -1,0 +1,16 @@
+extends no-analytics
+
+block head_before
+  include ../app/components/project/analytics/gtm.html
+
+
+block body_before
+  include ../app/components/project/analytics/gtm-body.html
+  include ../app/components/project/analytics/gtm-ua.html
+  include components/project/analytics/ym.html
+  //-include components/project/analytics/mts.html
+
+
+append scripts
+  include components/project/analytics/rutarget/15sec.html
+

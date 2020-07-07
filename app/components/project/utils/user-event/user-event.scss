@@ -1,0 +1,8 @@
+.user-event {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("user-event", $mod){
+      @content;
+    }
+  }
+}

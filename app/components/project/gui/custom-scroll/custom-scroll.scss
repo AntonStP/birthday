@@ -1,0 +1,14 @@
+.nicescroll-rails {
+  width: 7px;
+  border-radius: 7px;
+}
+
+.custom-scroll {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("custom-scroll", $mod) {
+      @content;
+    }
+  }
+  position: relative;
+}

@@ -1,0 +1,29 @@
+mixin winners(content, params)
+  .winners.parallax-container&attributes(content.attr)&attributes(attributes)
+    .winners__content
+      .winners__title!=content.title
+      .winners__carousel.winners__carousel_desktop
+        +carousel(content.list, {mixin:"winners__item"})(data-carousel="desktop")
+        .carousel__btn.carousel__btn_prev
+        .carousel__btn.carousel__btn_next
+      .winners__carousel.winners__carousel_mobile
+        +carousel(content.list, {mixin:"winners__item"})(data-carousel="mobile")
+        .carousel__btn.carousel__btn_prev
+        .carousel__btn.carousel__btn_next
+      +button(content.button).winners__button.button_big
+
+
+mixin winners__item(content, params)
+  .winners__item&attributes(attributes)
+    .winners__item-image
+      picture(data-delayed-attr="src|"+content.photo+".png;;"+content.photo+".png;(min-width: 1024px);"+content.photo+".webp;(min-width: 1024px);"+content.photo+".png;(max-width: 1023px);"+content.photo+".webp;(max-width: 1023px);" data-delayed-attr-delay="950|9500" style="visibility:hidden")
+    .winners__item-title!=content.name
+    .winners__item-prize!=content.prize
+    .winners__item-info
+      +pug-list(content.info, "winners__option")
+
+
+mixin winners__option(content, params)
+  .winners__option&attributes(attributes)
+    .winners__option-icon(class=`winners__option-icon_${content.icon}`)
+    .winners__option-text!=content.text

@@ -1,0 +1,19 @@
+mixin instruction-block(content, params)
+  .instruction-block&attributes(content.attr)&attributes(attributes)
+    .instruction-block__content
+      h2.instruction-block__title!=content.title
+      ul.instruction-block__list
+        +pug-list(content.list, "instruction-block__item")
+      +button(content.button).instruction-block__button
+
+
+mixin instruction-block__item(content, params)
+  li.instruction-block__item&attributes(content.attr)&attributes(attributes)
+    .instruction-block__item-line
+      != read(`app/components/project/instruction-block/svg/line-${content.index}.svg`)
+      != read(`app/components/project/instruction-block/svg/line-${content.index}-m.svg`)
+    .instruction-block__item-index!=content.index
+    .instruction-block__item-text!=content.text
+    .instruction-block__item-icon
+      img(data-delayed-attr='src|'+content.icon data-delayed-attr-delay="600|7000" alt=content.alt style="visibility:hidden")
+

@@ -1,0 +1,24 @@
+extends components/project/custom-page/custom-page
+
+append constants
+  -const ASSET_PREFIX = "";
+
+
+block title
+  title!=copyright.og.title
+
+
+block content
+  .section
+    +intro(copyright.intro)
+  .section
+    +lotomania(copyright.lotomania)
+  .section
+    +info-block(copyright.infoBlock)
+  .section
+    +instruction(copyright.instruction)
+  .section
+    +winners(copyright.winners)
+  .section
+    +information(copyright.information)
+  +footer(copyright.footer)

@@ -1,0 +1,8 @@
+.rutarget {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("rutarget", $mod){
+      @content;
+    }
+  }
+}

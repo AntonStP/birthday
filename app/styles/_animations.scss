@@ -1,0 +1,166 @@
+@mixin animation($animation){
+  @if content {
+    @keyframes #{nth($animation, 1)} {
+      @content;
+    }
+  }
+  @if & {
+    @if length($animation) == 1 {
+      animation-name: $animation;
+    } @elseif length($animation) > 1 {
+      animation: $animation;
+    }
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-index {
+  0% {
+    opacity: 0;
+    transform: scale(0.46);
+    color: rgba(#E18633,0);
+  }
+  30%{
+    color: rgba(#E18633,0);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100%{
+    color: rgba(#E18633,1);
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes fade-in-text {
+  0% {
+    opacity: 0;
+    transform: translate(20%,0);
+  }
+  100%{
+    opacity: 1;
+    transform:  translate(0%,0);
+  }
+}
+@keyframes fade-in-top {
+  0% {
+    opacity: 0;
+    transform: translate(0, -10vh);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0);
+  }
+}
+
+//%SHAKE {
+//  @include shake-animation(SCALE-SHAKE, .025, 1, 1.0s);
+//}
+
+@keyframes dash {
+  0% {
+    transform: scale(1,1);
+  }
+  100% {
+    transform: scale(1,0);
+  }
+}
+@keyframes mon {
+  0%{
+    background-position: 0 0;
+  }
+  100%{
+    background-position: 0 100%;
+  }
+}
+
+@keyframes salut {
+  0%{
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    top: 50%;
+    transform: rotate(-40deg);
+    opacity: 0;
+  }
+  60%{
+    transform: rotate(-40deg);
+    opacity: 0;
+  }
+  80%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 0;
+  }
+}
+
+@keyframes light {
+  0%,100%{
+    opacity: 0.4;
+  }
+  40%,85%{
+    opacity: 0.35;
+  }
+}
+
+
+@keyframes arrow-1 {
+  0% {
+    opacity: 0;
+    fill: #FFFFFF;
+  }
+
+  33% {
+    opacity: 1;
+    fill: #FFFFFF;
+  }
+
+  66%, 
+  99% {
+    opacity: 1;
+    fill: #FFED46;
+  }
+
+  100% {
+    opacity: 0;
+    fill: #FFED46;
+  }
+}
+
+@keyframes arrow-2 {
+  0%,
+  33% {
+    fill: #FFFFFF;
+    opacity: 0;
+  }
+
+  90% {
+    fill: #FFFFFF;
+    opacity: 1;
+  }
+
+  99% {
+    fill: #FFED46;
+    opacity: 1;
+  }
+
+  100% {
+    fill: #FFED46;
+    opacity: 0;
+  }
+
+
+}

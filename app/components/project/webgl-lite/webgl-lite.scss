@@ -1,0 +1,8 @@
+.webgl-lite {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("webgl-lite", $mod){
+      @content;
+    }
+  }
+}

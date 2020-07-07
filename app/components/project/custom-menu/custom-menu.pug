@@ -1,0 +1,7 @@
+mixin custom-menu__item(content, params)
+  +pug-if(content, 'inactive', true)
+    a(data-navigo).scroll-reminders.custom-menu__item&attributes(content.attr)&attributes(attributes)!= content.label
+
+mixin custom-menu(content, params)
+  ul.custom-menu
+    +pug-list(content, 'custom-menu__item')

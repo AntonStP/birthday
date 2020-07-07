@@ -1,0 +1,8 @@
+.gl-video {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("gl-video", $mod){
+      @content;
+    }
+  }
+}

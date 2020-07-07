@@ -1,0 +1,19 @@
+<!-- MTS ADV counter -->
+<script type="text/javascript">
+    var events = window.events || (window.events = []);
+    events.push({client_id: "stoloto", event_type: "pageview", start: (new Date()).getTime()});
+    (function (d, w, id) {
+        if (d.getElementById(id)) return;
+        var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+        ts.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//tech.rtb.mts.ru/js/sync.js";
+        var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+        if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+    })(document, window, "mtsadv-counter");
+</script>
+
+<noscript>
+  <iframe src="https://tech.rtb.mts.ru/stoloto?event_type=pageview"
+          height="0" width="0" style="display:none;visibility:hidden">
+  </iframe>
+</noscript>
+<!-- MTS ADV counter -->

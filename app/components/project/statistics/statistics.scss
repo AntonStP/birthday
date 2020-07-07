@@ -1,0 +1,110 @@
+.statistics {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("statistics", $mod){
+      @content;
+    }
+  }
+  position: relative;
+  background: linear-gradient(85.72deg, #BB5FC4 1.71%, #EF4949 49.84%, #F26B41 97.22%);
+  @include MOBILE{
+    background: linear-gradient(88.95deg, #BB5FC4 3.34%, #EF4949 49.84%, #F26B41 96.51%);
+  }
+
+  &__content{
+    position: relative;
+    @include wrapper;
+    @include option(padding, 63 0 88, 35 0 43 2);
+    box-sizing: border-box;
+    color: $WHITE;
+  }
+
+
+  &__title{
+    @extend %H2;
+    font-weight: 500;
+    text-align: center;
+    margin: 0;
+    @include MOBILE{
+      text-align: left;
+    }
+  }
+
+  &__subtitle{
+    @include option(font-size, 30, 21);
+    @include option(line-height, 39, 25);
+    @include option(margin, 42 0 52, 37 0 28);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    @include MOBILE{
+      width: 100%;
+      letter-spacing: -0.01em;
+      br{
+        display: none;
+      }
+    }
+  }
+
+  &__list{
+    @include option(margin, 80 0 24, 10 0);
+  }
+  &__item{
+    @include option(margin, 0 0 38, 0 0 31);
+    &:nth-last-of-type(1){
+      margin-bottom: 0;
+    }
+  }
+  &__item-index{
+    @include option(font-size, 40, 30);
+    @include option(line-height, 24);
+    @include option(margin, 0 0 12, 0 0 8);
+  }
+  &__item-text{
+    @include option(font-size, 21, 16);
+    line-height: 1;
+  }
+
+  &__map{
+    position: absolute;
+    @include option(top, 239, auto);
+    @include option(right, -165, 10);
+    @include option(width, 652, 343);
+    @include option(margin, 0, 42 0 0);
+    img{
+      pointer-events: none;
+      width: 100%;
+      display: block;
+    }
+
+    @include MOBILE{
+      position: relative;
+    }
+  }
+
+  &__map-salute{
+    position: absolute;
+    img{
+      pointer-events: none;
+      display: block;
+      width: 100%;
+    }
+    &:nth-of-type(1){
+      @include option(width, 133.46, 67.55);
+      @include option(top, 18, 26);
+      @include option(left, 94, 20);
+    }
+
+    &:nth-of-type(2){
+      @include option(width, 109, 55);
+      @include option(top, -85, -20);
+      @include option(left, 214, 100);
+    }
+
+  }
+
+  &__button{
+    @include option(width, 341, 323);
+    @include option(height, 68, 60);
+    letter-spacing: -0.04em;
+  }
+}

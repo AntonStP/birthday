@@ -1,0 +1,11 @@
+mixin pages(content, params)
+  .pages&attributes(attributes)
+    .pages__list
+      +pug-list(content, "pages__item")
+
+
+
+mixin pages__item(content, params)
+  .pages__item&attributes(attributes)
+    .pages__item-title!=content.title
+    iframe&attributes(content.attr)&attributes(attributes)

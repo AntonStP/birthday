@@ -1,0 +1,50 @@
+.custom-menu {
+  @mixin mod($mod) {
+    @include modifier("custom-menu", $mod){
+      @content;
+    }
+  }
+  @mixin item-mod($mod) {
+    @include modifier("custom-menu__item", $mod){
+      @content;
+    }
+  }
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: auto;
+  box-sizing: border-box;
+  z-index: 2;
+  pointer-events: none;
+  @include option(margin, 0 0 20, 0);
+
+  @include MOBILE{
+    display: none;
+  }
+
+  &__item {
+    @include option(margin-left, 17, 0);
+    text-align: right;
+    color: $WHITE;
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    @include option(font-size, 10);
+    text-transform: uppercase;
+    letter-spacing: 0.095em;
+    transition: color 0.3s ease-in-out;
+    pointer-events: all;
+
+    @include HOVER{
+      &:hover{
+        color: #ffff03;
+      }
+    }
+
+    @include item-mod(active){
+    }
+  }
+
+}

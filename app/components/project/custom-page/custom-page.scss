@@ -1,0 +1,30 @@
+@import "../../framework/page/page";
+
+.custom-page {
+  min-height: 100%;
+  position: relative;
+  @extend %DEFAULT;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: #F3F2F2;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .section{
+    &_fixed{
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      //@include wrapper();
+      margin: auto;
+      z-index: 1;
+    }
+  }
+
+}
+

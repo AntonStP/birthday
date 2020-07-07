@@ -1,0 +1,147 @@
+.footer {
+  // Константы
+  @mixin mod($mod) {
+    @include modifier("footer", $mod){
+      @content;
+    }
+  }
+  @mixin link-hover {
+    .footer__link:hover &{
+      @content;
+    }
+  }
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background: #3C3939;
+  @include option(padding, 34 0 , 18px 14px 40);
+
+  @include MOBILE{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 7;
+  }
+
+  &__wrap{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    max-width: 83vw;
+    margin: auto;
+    @include option(width, 818, $WRAPPER-D-M);
+
+    @include MOBILE{
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      max-width: 86vw;
+    }
+  }
+
+
+  &__logo{
+    display: inline-block;
+    @include option(height, 34, 42.18);
+    img{
+      display: block;
+      pointer-events: none;
+      height: 100%;
+    }
+  }
+
+  &__text{
+    @extend %FOOTER-TEXT;
+    position: relative;
+    @include option(margin, 45px 0 0,0);
+    @include option(padding, 0 115 0 0, 0 0 0 7);
+    width: 100%;
+    text-align: justify;
+    box-sizing: border-box;
+    @include MOBILE{
+      order: 4;
+      text-align: left;
+    }
+
+    &:after{
+      content: "";
+      clear: both;
+      position: absolute;
+      @include option(top, 3, auto);
+      @include option(right, -3, auto);
+      display: inline-block;
+      vertical-align: middle;
+      @include option(width, 75);
+      @include option(height, 75);
+      @include option(margin, auto 0, 25px auto 0);
+      background: image("footer/18.svg") no-repeat center / contain;
+
+      @include MOBILE{
+        position: relative;
+        display: block;
+      }
+    }
+  }
+
+  &__social-block{
+    @include option(margin, 0 -23px 0 0, 22px 0 25);
+
+    @include MOBILE{
+      order: 2;
+    }
+  }
+
+  &__link{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    @include option(width, auto, auto);
+    @include option(margin, 0, 20px auto 0);
+    @include option(height, 30.59, 30);
+    @include option(padding, 0 6, 0 12);
+    color: rgba(0,0,0,0.4997);
+    font-size: 0;
+    @include option(border-radius, 8, 6);
+    border: 1px solid rgba($WHITE, 0.2);
+    transition: opacity 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+
+    @include MOBILE{
+      justify-content: space-between;
+      order: 1;
+    }
+
+    @include HOVER{
+      &:hover{
+        opacity: 0.5;
+      }
+    }
+  }
+
+  &__link-text{
+    @extend %LINK;
+    color: $WHITE;
+    @include option(font-size, 13.5);
+    @include option(letter-spacing, 0.3px, 0);
+  }
+
+  &__link-icon{
+    display: inline-block;
+    vertical-align: middle;
+    @include option(width, 12);
+    @include option(height, 14);
+    @include option(margin-right, 7, 6);
+
+    img{
+      pointer-events: none;
+      display: block;
+      height: 100%;
+    }
+
+  }
+}

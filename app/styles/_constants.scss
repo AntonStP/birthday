@@ -1,0 +1,64 @@
+/**
+ * breakpoints
+ */
+$MOBILE: 320px;
+$TABLET: 768px;
+$TABLET-L: 1024px;
+$DESKTOP: 1279px;
+
+/**
+ * font-family
+ */
+$BASE-FONT:  'Montserrat', Helvetica, sans-serif;
+$FOOTER-FONT:  'Arial', Helvetica, sans-serif;
+
+/**
+ * color
+ */
+$SANDY: #eee2c7;
+$BROWN: #99856e;
+$FLAG: #ddd0b1;
+$WHITE: #ffffff;
+$BLACK: #000000;
+$GRAY: #4c4c4c;
+$GRAY-1: #E5ECEF;
+$YELLOW: #FFE144;
+$YELLOW-1: #FED957;
+$GREEN: #6FF331;
+$RED: #D83D0C;
+$FOOTER: rgba(0,0,0,0.3012);
+
+/**
+ * z-layer
+ */
+$z-modal: 1000;
+$z-timer: 100;
+$z-item: 1;
+
+
+/**
+ * font-weight
+ */
+$FW-NORMAL: 400;
+$FW-BOLD: 700;
+$FW-THIN: 100;
+$FW-EXTRA_LIGHT: 200;
+$FW-ULTRA_LIGHT: 200;
+$FW-LIGHT: 300;
+$FW-MEDIUM: 500;
+$FW-SEMI_BOLD: 600;
+$FW-DEMI_BOLD: 600;
+$FW-EXTRA_BOLD: 800;
+$FW-ULTRA_BOLD: 800;
+$FW-BLACK: 900;
+$FW-HEAVY: 900;
+
+/**
+ * other
+ */
+$DESIGN-W: 1479px;
+$DESIGN-H: 700px;
+$DESIGN-W-M: 375px;
+
+$WRAPPER-D: 823px;
+$WRAPPER-D-M: 325px;

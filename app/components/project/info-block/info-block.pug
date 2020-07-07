@@ -1,0 +1,26 @@
+mixin info-block(content, params)
+  .info-block&attributes(content.attr)&attributes(attributes)
+    .info-block__bg
+    .info-block__content
+      .info-block__title!=content.title
+      +info-block__list(content.info)
+      +info-block__more(content.more)
+      +button(content.button).info-block__button
+
+mixin info-block__list(content, params)
+  .info-block__list&attributes(attributes)
+    if content.title
+      .info-block__list-title!=content.title
+    .info-block__list-list
+      +pug-list(content.list, "info-block__item")
+
+mixin info-block__item(content, params)
+  .info-block__item&attributes(attributes)
+    .info-block__item-icon
+      img(data-delayed-attr="src|"+content.icon alt=content.alt data-delayed-attr-delay="650|6500" style="visibility:hidden")
+    .info-block__item-text!=content.text
+
+mixin info-block__more(content, params)
+  .info-block__more&attributes(attributes)
+    .info-block__more-icon
+    .info-block__more-text!=content.text

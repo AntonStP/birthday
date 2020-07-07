@@ -1,0 +1,47 @@
+@import "../../framework/modal/modal";
+
+.custom-modal {
+  @mixin mod($mod) {
+    @include modifier("custom-modal", $mod){
+      @content;
+    }
+  }
+  @extend %DEFAULT;
+  position: relative;
+  text-align: left;
+  @include option(width, 540, 344);
+
+  @include modal_fullscreen(){
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  &__close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    @include option(width, 47);
+    @include option(height, 47);
+    @include option(padding, 16);
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: opacity .3s ease-in-out;
+    @include modal_fullscreen(){
+      right: 61px;
+      top: 61px;
+    }
+    @include MOBILE{
+      display: none;
+    }
+    @include HOVER{
+      &:hover{
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &__close-btn-icon {
+    @include cross(100%, 2px, $BLACK);
+  }
+}

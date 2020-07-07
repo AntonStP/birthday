@@ -1,0 +1,39 @@
+mixin feedback(content, params)
+  .feedback&attributes(content.attr)&attributes(attributes)
+    .feedback__bg
+      .feedback__bg-light
+        picture(data-delayed-attr="src|images/1px.png;;images/feedback/light.png;(min-width: 1024px);images/1px.png;(max-width: 1023px)" data-delayed-attr-delay="2500" style="visibility:hidden")
+      .feedback__bg-fade.feedback__bg-fade_1
+      .feedback__bg-fade.feedback__bg-fade_2
+    .feedback__content
+      +feedback__man
+      .feedback__title!=content.title
+      .feedback__list
+        .feedback__list-btn.feedback__list-btn_prev
+        .feedback__list-btn.feedback__list-btn_next
+        +carousel(content.list, {mixin:"feedback__item"})(data-carousel="feedbackDesktop").feedback__carousel.feedback__carousel_desktop
+        +carousel(content.list, {mixin:"feedback__item"})(data-carousel="feedbackMobile").feedback__carousel.feedback__carousel_mobile
+      +button(content.button).feedback__button
+
+mixin feedback__item(content, params)
+  .feedback__item&attributes(content.attr)&attributes(attributes)
+    .feedback__item-text!=content.text
+    .feedback__item-title!=content.name
+    .feedback__item-index Победитель тиража №#{content.index}
+
+mixin feedback__man(content,params)
+  .feedback__man&attributes(attributes)
+    .feedback__man-salut
+      +pug-list(copyright.feedback.salut, "feedback__bg-item")
+      +pug-list(copyright.feedback.images, "feedback__man-img")
+    picture(data-delayed-attr="src|images/1px.png;;images/feedback/man.png;(min-width: 1024px);images/feedback/man.webp;(min-width: 1024px);images/feedback/man-m.png 1x, images/feedback/man-m@2x.png 2x;(max-width: 1023px);images/feedback/man-m.webp 1x, images/feedback/man-m@2x.webp 2x;(max-width: 1023px)" data-delayed-attr-delay="700|7000" style="visibility:hidden")
+
+mixin feedback__bg-item(content, params)
+  .feedback__bg-item&attributes(content.attr)&attributes(attributes)
+    if content.src
+      img(data-delayed-attr="src|" + content.src  data-delayed-attr-delay="700|7000" style="visibility:hidden")
+
+mixin feedback__man-img(content, params)
+  .feedback__man-img&attributes(content.attr)&attributes(attributes)
+    if content.src
+      img(data-delayed-attr="src|" + content.src  data-delayed-attr-delay="700|7000" style="visibility:hidden")
