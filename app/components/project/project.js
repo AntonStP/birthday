@@ -1,22 +1,11 @@
-require('../framework/jquery/plugins/jquery.easing.min.js');
-
-// UTILS
-//-require('./utils/user-event/user-event');
-require('./utils/inviewport/inviewport');
-require('./utils/delayed-attr/delayed-attr');
-require('./analytics/analytics');
-
+import './utils/touch-device/touch-device';
 // GUI
-import './gui/gui';
+import "./gui/gui";
 
 // Элементы
-require('./parallax-container/parallax-container');
-require('./webgl-lite/gl-video/gl-video');
-
-//- require('./money/money');
-//- require('./winners/winners');
-
+// require('./custom-modal/custom-modal');
 
 // Блоки
 
 // Страницы
+// -require('./p-example/p-example');

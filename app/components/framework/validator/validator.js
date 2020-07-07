@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Проверки:
  * 1. Поле заполнено {"fieldName": "required"}
@@ -32,9 +33,8 @@
  * @typedef {object|object[]} verification
  */
 
-import {ApiError} from '../api/api-error/api-error';
-import {verifications} from './validator__verifications';
-
+import { ApiError } from "../api/api-error/api-error";
+import { verifications } from "./validator__verifications";
 
 /**
  *
@@ -43,7 +43,7 @@ import {verifications} from './validator__verifications';
  * @return {ApiError}
  * @return {ApiError|boolean}
  */
-export function verificate(data, verifications){
+export function verificate(data, verifications) {
   return doVerification(data, verifications);
 }
 
@@ -52,18 +52,17 @@ export function verificate(data, verifications){
  * @param {string} string
  */
 export function parseDataAttribute(string) {
-  return typeof string !== 'string'
+  return typeof string !== "string"
     ? string
-    : string.split(',').map(itm=>{
-      let arr = itm.split(':');
-      if (arr.length === 1) {
-        return itm;
-      }
-      let res = {};
-      res[arr.shift()] = arr;
-      return res;
-    });
-
+    : string.split(",").map(itm => {
+        const arr = itm.split(":");
+        if (arr.length === 1) {
+          return itm;
+        }
+        const res = {};
+        res[arr.shift()] = arr;
+        return res;
+      });
 }
 
 /**
@@ -73,14 +72,16 @@ export function parseDataAttribute(string) {
  * @return {ApiError|boolean}
  */
 function doVerification(data, verifications) {
-  let error = new ApiError({code: ApiError.VERIFICATION_ERROR});
+  const error = new ApiError({ code: ApiError.VERIFICATION_ERROR });
   if (Array.isArray(verifications)) {
-    verifications.forEach(itm=>error.extend(doVerification(data, itm)));
-  } else if (verifications){
-    Object.keys(verifications)
-      .forEach(key=>{
-        error.addErrorMessage(key, doFieldVerifications(data, verifications[key], key));
-      });
+    verifications.forEach(itm => error.extend(doVerification(data, itm)));
+  } else if (verifications) {
+    Object.keys(verifications).forEach(key => {
+      error.addErrorMessage(
+        key,
+        doFieldVerifications(data, verifications[key], key)
+      );
+    });
   }
 
   return error.isError() ? error : false;
@@ -96,20 +97,27 @@ function doVerification(data, verifications) {
 function doFieldVerifications(data, fieldVerifications, fieldName) {
   let messages = [];
   if (Array.isArray(fieldVerifications)) {
-    fieldVerifications.forEach(verification=>{
-      messages = messages.concat(doFieldVerifications(data, verification, fieldName));
+    fieldVerifications.forEach(verification => {
+      messages = messages.concat(
+        doFieldVerifications(data, verification, fieldName)
+      );
     });
   } else {
     switch (typeof fieldVerifications) {
       case "string":
-        fieldVerifications.split(",").forEach(verification=>pass(verifyField(data, fieldName, verification)));
+        fieldVerifications
+          .split(",")
+          .forEach(verification =>
+            pass(verifyField(data, fieldName, verification))
+          );
         break;
       case "function":
-        pass( fieldVerifications(data, fieldName) );
+        pass(fieldVerifications(data, fieldName));
         break;
       case "object":
-        Object.keys(fieldVerifications)
-          .forEach(key=>pass( verifyField(data, fieldName, key, fieldVerifications[key]), key ));
+        Object.keys(fieldVerifications).forEach(key =>
+          pass(verifyField(data, fieldName, key, fieldVerifications[key]), key)
+        );
         break;
     }
   }
@@ -117,10 +125,10 @@ function doFieldVerifications(data, fieldVerifications, fieldName) {
   return messages;
 
   function pass(value, fieldName) {
-    if (value !== true){
-      let msg = {};
+    if (value !== true) {
+      const msg = {};
       msg[fieldName || fieldVerifications] = value;
-      messages.push( msg );
+      messages.push(msg);
     }
   }
 }
@@ -138,15 +146,11 @@ function verifyField(data, fieldName, verifyName, verifyParams) {
       return tester(data, fieldName, verifyParams);
 
     default:
-      if (typeof tester['test'] === "function") {
-        return tester['test'](data[fieldName], data, verifyParams);
+      if (typeof tester.test === "function") {
+        return tester.test(data[fieldName], data, verifyParams);
       }
   }
-
 }
-
-
-
 
 /* TESTS */
 /*

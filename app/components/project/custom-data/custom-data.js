@@ -1,5 +1,4 @@
-import {Data} from '../../framework/data/data';
+/* eslint-disable */
+import { Data } from "../../framework/data/data";
 
-export class CustomData extends Data {
-
-}
+export class CustomData extends Data {}

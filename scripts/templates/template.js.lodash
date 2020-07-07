@@ -1,15 +1,17 @@
-import {registerPlugins, Plugin} from '<%- relativePath %>';
+import {
+  registerPlugins,
+  Plugin
+} from "<%- relativePathNoExt %>";
 
 class <%-className%> extends Plugin {
+  // eslint-disable-next-line no-useless-constructor
   constructor($element) {
     super($element);
   }
 }
 
-registerPlugins(
-  {
-    "name": "<%-camelCase%>",
-    "Constructor": <%-className%>,
-    "selector": ".<%-componentName%>"
-  }
-);
+registerPlugins({
+  name: "<%-camelCase%>",
+  Constructor: <%-className%>,
+  selector: ".<%-componentName%>"
+});

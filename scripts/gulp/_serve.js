@@ -5,14 +5,14 @@ const proxy = require('http-proxy-middleware');
 
 const styles = require('./_styles');
 const scripts = require('./_scripts');
-// const lint = require('./_lint');
+const lint = require('./_lint');
 const pug = require('./_pug');
 
 const CONFIG = require('./config');
 
 const createProxyMiddleware = typeof proxy === "function" ? proxy : proxy.createProxyMiddleware;
 
-module.exports = gulp.series(require('./_clean'), gulp.series(gulp.parallel(pug, styles, scripts, /*lint, 'svg'*/), run));
+module.exports = gulp.series(require('./_clean'), gulp.series(gulp.parallel(pug, styles, scripts, lint/*, 'svg'*/), run));
 
 function run(cb) {
   const middleware = [];

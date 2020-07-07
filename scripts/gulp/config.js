@@ -1,5 +1,3 @@
-const execSync = require('child_process').execSync;
-
 const watchify = require('watchify');
 const browserify = require('browserify');
 const babelify = require('babelify');
@@ -15,43 +13,54 @@ const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 
 
+const outputDependenciesList = false;
 const rootFontSize = 16;
+const buildDir = "dist";
+const htdocs = ""; //"htdocs/";
 
 
 
 const DEBUG = {
   rem: rootFontSize,
-  read: read,
-  require: require,
+  read,
+  require,
   unique: unique(),
   version: pkg.getVersion,
   projectName: pkg.getProjectName(),
-  _: _,
+  projectDescription: pkg.getProjectDescription(),
+  project_id: pkg.getProjectId(),
+  _,
   assign: _.assign,
   debug: true,
   release: false,
   oAuth: true,
-  base_url: base_url(""),
+  base_url: base_url(''),
   route: {},
-  copyright: "app/components/copyright.json",
+  copyright: 'app/components/copyright.json',
   php: false,
-  isBitrix: function () {return info.isBitrix;}
+  isBitrix: () => {return info.isBitrix;}
 };
 const RELEASE = _.assign({}, DEBUG, {
   // oAuth: false,
   debug: false,
-  php: false,
+  php: true,
   release: true
 });
 const DEV = _.assign({}, RELEASE, {
   oAuth: true,
-  //TODO ���������� id �������
-  base_url: base_url('/2019/190217/')
+  base_url: base_url(getCurrentProjectDir())
 });
 
+function getCurrentProjectDir() {
+  return getProjectDirById(pkg.getProjectId())
+}
+function getProjectDirById(id) {
+  return `/20${id.substr(0,2)}/${id}/`;
+}
+
 const BITRIX = _.assign({}, RELEASE, {
-  //base_url: base_url("/dev/"),
-  copyright: "app/components/copyright_bitrix.json"
+  // base_url: base_url("/dev/"),
+  copyright: 'app/components/copyright_bitrix.json'
 });
 
 const _browserify = {};
@@ -59,7 +68,7 @@ const _browserify = {};
 
 function base_url(_base_url) {
   return  function(str, suffix){
-    return (suffix ? suffix + '/' : '' ) + (_base_url + (str || '')).replace(/\/{2}/g, "/");
+    return (suffix ? suffix + '/' : '' ) + (_base_url + (str || '')).replace(/\/{2}/g, '/');
   }
 }
 
@@ -69,66 +78,84 @@ function getBrowserify(entry) {
   if (!entry) return _browserify;
   if (_browserify[entry]) return _browserify[entry];
 
-  let customOpts = {
-    entries: [entry],//'./app/scripts/main.js'],
+  const customOpts = {
+    entries: [entry], // './app/scripts/main.js'],
     debug: info.isServe || info.isDev,
     transform: ['babelify']
   };
   if (info.isServe) {
     customOpts.plugin = [watchify];
   }
-  let opts = _.assign({}, watchify.args, customOpts);
-  return _browserify[entry] = browserify(opts);
+  const opts = _.assign({}, watchify.args, customOpts);
+  const b = browserify(opts);
+  _browserify[entry] = b;
+
+  if (outputDependenciesList && !info.isServe) {
+    const _replace = pathReplace(__dirname);
+    const through = require('through2').obj;
+    b.pipeline.get('deps').push(through(
+      function traceDeps(row, enc, next) {
+        const dep = _replace(row.file || row.id);
+
+        console.log('\x1b[32m%s\x1b[0m', dep);
+        next();
+      }
+    ));
+  }
+  return b;
+
+  function pathReplace(dir) {
+    dir = require('path').resolve(dir, '../../');
+    return path=>path.replace(dir, '');
+  }
 }
 
-function getPugData() {
-  return info.isServe
-    ? DEBUG
-    : info.isDev
-      ? DEV
-      : info.isBitrix
-        ? BITRIX
-        : RELEASE
-}
+let info = {
+  getCurrentProjectDir,
 
-let info = module.exports = {
-
-  init: function(params){
-    return function configInit(cb){
+  init(params) {
+    return (cb) => {
       _.assign(info, params);
       cb();
     }
   },
 
-  plumber: ()=>plumber({errorHandler: notify.onError("Error: <%= error.message %>")}),
+  plumber: ()=>plumber({errorHandler: notify.onError('Error: <%= error.message %>')}),
 
+  getDestinationRoot() {
+    return baseUrl(htdocs, buildDir);
+  },
 
-  getDestination: (dir) =>
-    info.isBitrix
-      ? `./dist/local/templates/${require('./bitrix').bitrixTemplateName()}/${dir}`
-      : baseUrl(dir, 'dist')
-  ,
+  getDestination(dir) {
+    return info.isBitrix
+      ? `./${buildDir}/local/templates/${require('./bitrix').bitrixTemplateName()}/${dir}`
+      : baseUrl(`${htdocs}${dir}`, buildDir)
+  },
 
-  rootFontSize: rootFontSize,
-  author: (function(){
-    let author;
-    return function () {
-      return author = author || _.trim(String(execSync("git config user.name")));
-    }
-  }()),
+  rootFontSize,
+  author: require("./utils/user-name"),
 
   isServe: false,
   isDev: false,
   isBitrix: false,
   noVersion: false,
 
-  getBrowserify: getBrowserify,
+  getBrowserify,
   sourcemaps: {
     init: ()=>_if(info.isServe, sourcemaps.init()),
     write: ()=>_if(info.isServe, sourcemaps.write())
   },
   pug: {
     pretty: true,
-    getData: getPugData
+    getData: () => {
+      switch (true) {
+        case info.isServe: return DEBUG;
+        case info.isDev: return DEV;
+        case info.isBitrix: return BITRIX;
+        default: return RELEASE;
+      }
+    }
   }
 };
+
+module.exports = info;

@@ -1,7 +1,7 @@
-import $ from 'jquery';
+/* eslint-disable */
+import $ from "jquery";
 
 const PREFIX = "peppers.jQueryConstructor.";
-
 
 /**
  * @param {function} _Class
@@ -24,22 +24,24 @@ export default function(_Class, _BaseClass, name) {
   if (!name) name = /^\s*function\s+([^\s()]+)/.exec(_Class.toString())[1];
 
   name = PREFIX + name;
-  return function (...args) {
-    let collection = new $;
-    this.each(function () {
-      let $t = $(this);
+  return function(...args) {
+    let collection = new $();
+    this.each(function() {
+      const $t = $(this);
       let instance = $t.data(name);
       let $newElement;
 
       if (!instance) {
-        $t.data(name, instance = new _Class($t));
+        $t.data(name, (instance = new _Class($t)));
       }
 
       if (typeof instance.init === "function") {
         $newElement = instance.init.apply(instance, args);
       }
 
-      collection = collection.add(typeof $newElement !== 'undefined' ? $newElement : $t);
+      collection = collection.add(
+        typeof $newElement !== "undefined" ? $newElement : $t
+      );
     });
 
     return collection;

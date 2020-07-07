@@ -47,7 +47,7 @@ function remove(regexp) {
 
 function copyBitrixAssets(cb){
   if (initGulpTasks()) {
-    return gulp.parallel(bitrixCopyExtra);
+    return gulp.parallel(bitrixCopyExtra).apply(this, arguments);
   } else {
     cb();
   }

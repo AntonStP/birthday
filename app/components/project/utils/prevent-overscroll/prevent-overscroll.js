@@ -1,6 +1,7 @@
-import {registerPlugins} from '../../../framework/jquery/plugins/plugins';
+/* eslint-disable */
+import { registerPlugins } from "../../../framework/jquery/plugins/plugins";
 
-/*var $log = $(document.createElement('div')).appendTo(document.body)
+/* var $log = $(document.createElement('div')).appendTo(document.body)
   .css({
     'background': '#000000',
     'color': '#ffffff',
@@ -9,21 +10,22 @@ import {registerPlugins} from '../../../framework/jquery/plugins/plugins';
     'top': 0,
     'left': 0,
     'z-index': 9999
-  });*/
-
+  }); */
 
 class PreventOverscroll {
   constructor($element) {
-    var startTouch, touchMove;
-    var scrollTop, scrollHeight, viewportHeight;
+    let startTouch;
+    let touchMove;
+    let scrollTop;
+    let scrollHeight;
+    let viewportHeight;
 
-    var $touchTarget = $element.on('touchstart', onTouchStart);
+    const $touchTarget = $element.on("touchstart", onTouchStart);
 
-    this.init = function (params) {
-      if (['destroy', 'dispose'].indexOf(params) >= 0) {
+    this.init = function(params) {
+      if (["destroy", "dispose"].indexOf(params) >= 0) {
         destroy();
       } else {
-
       }
     };
 
@@ -31,29 +33,29 @@ class PreventOverscroll {
       $element.off();
     }
 
-
     function onTouchStart(event) {
       if (!startTouch) {
         startTouch = getTouchPosition(event)[0];
 
         scrollTop = $element.scrollTop();
-        $touchTarget
-         .on('touchmove', onTouchMove)
-         .on('touchend', onTouchEnd);
+        $touchTarget.on("touchmove", onTouchMove).on("touchend", onTouchEnd);
       }
     }
 
     function onTouchMove(event) {
-      var _touchMove = getTouchPosition(event, startTouch.id);
+      let _touchMove = getTouchPosition(event, startTouch.id);
       _touchMove = _touchMove[0];
 
-      var dy = _touchMove.y - startTouch.y;
+      const dy = _touchMove.y - startTouch.y;
 
       scrollHeight = Math.floor($element.get(0).scrollHeight);
       viewportHeight = Math.ceil($element.outerHeight());
 
       // var isOverscroll = false;
-      if (isOverscrollUp(scrollTop, scrollHeight, viewportHeight, dy) || isOverscrollDown(scrollTop, scrollHeight, viewportHeight, dy)) {
+      if (
+        isOverscrollUp(scrollTop, scrollHeight, viewportHeight, dy) ||
+        isOverscrollDown(scrollTop, scrollHeight, viewportHeight, dy)
+      ) {
         event.preventDefault();
         // isOverscroll = true;
       }
@@ -62,26 +64,23 @@ class PreventOverscroll {
       touchMove = _touchMove;
 
       function isOverscrollUp(scrollTop, scrollHeight, viewportHeight) {
-        return scrollTop - dy <= 0;// && dy > 0;
+        return scrollTop - dy <= 0; // && dy > 0;
       }
       function isOverscrollDown(scrollTop, scrollHeight, viewportHeight) {
-        return scrollTop - dy >= scrollHeight - viewportHeight;// && dy < 0;
+        return scrollTop - dy >= scrollHeight - viewportHeight; // && dy < 0;
       }
     }
-
 
     function onTouchEnd(event) {
       startTouch = undefined;
       touchMove = undefined;
-      $touchTarget
-        .off('touchmove', onTouchMove)
-        .off('touchend', onTouchEnd);
+      $touchTarget.off("touchmove", onTouchMove).off("touchend", onTouchEnd);
     }
 
-    function getTouchPosition(event, touchId){
-      var _map = [];
-      var notID = typeof touchId === 'undefined';
-      for (var i = 0; i < event.touches.length; i++) {
+    function getTouchPosition(event, touchId) {
+      const _map = [];
+      const notID = typeof touchId === "undefined";
+      for (let i = 0; i < event.touches.length; i++) {
         if (notID || event.touches[i].identifier === touchId) {
           _map.push(map(event.touches[i]));
         }
@@ -94,16 +93,14 @@ class PreventOverscroll {
           target: event.target,
           x: touch.screenX || touch.pageX || touch.clientX,
           y: touch.screenY || touch.pageY || touch.clientY
-        }
+        };
       }
     }
   }
 }
 
-registerPlugins(
-  {
-    'name': 'preventOverscroll',
-    'Constructor': PreventOverscroll,
-    'selector': '[data-prevent-overscroll]'
-  }
-);
+registerPlugins({
+  name: "preventOverscroll",
+  Constructor: PreventOverscroll,
+  selector: "[data-prevent-overscroll]"
+});

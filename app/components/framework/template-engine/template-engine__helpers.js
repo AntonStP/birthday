@@ -1,10 +1,12 @@
-import Handlebars from 'handlebars';
-import CamelCase from '../../framework/utils/camel-case';
-import _getEnd from '../../framework/utils/get-end';
-import toFixed from '../../framework/utils/to-fixed';
+/* eslint-disable */
+import Handlebars from "handlebars";
+import CamelCase from "../utils/camel-case";
+import _getEnd from "../utils/get-end";
+import toFixed from "../utils/to-fixed";
 // import Typograf from 'Typograf';
 
 initHelpers({
+  date,
   number,
   getEnd,
   templateEngine,
@@ -12,19 +14,20 @@ initHelpers({
   toFixed,
   json,
   initName,
-  p,
-  "switch": switch_switch,
-  "case": switch_case,
-  "default": switch_default,
+  p: bothBlockAndSimpleNormalize(p),
+  initLinks: bothBlockAndSimpleNormalize(initLinks),
+  sequence,
+  switch: switch_switch,
+  case: switch_case,
+  default: switch_default
   // typograf: initTypograf(Typograf)
 });
 
 function initHelpers(obj) {
-  Object.keys(obj).forEach(key=>{
+  Object.keys(obj).forEach(key => {
     Handlebars.registerHelper(CamelCase.from(key), obj[key]);
-  })
+  });
 }
-
 
 /**
  * Форматирование числа - разбиение большого числа на блоки по 3 цифры
@@ -32,8 +35,8 @@ function initHelpers(obj) {
  * @param {number} val - форматируемое число
  * @return {string}
  */
-function number(floor, val){
-  const SEP = ' ';
+function number(floor, val) {
+  const SEP = "&nbsp;";
 
   if (arguments.length === 2) {
     val = parseFloat(floor);
@@ -44,13 +47,13 @@ function number(floor, val){
     }
   }
 
-  let num = ('' + val).split('.');
+  const num = `${val}`.split(".");
   num[0] = formatInt(num[0]);
-  return num.join('.');
+  return num.join(".");
 
   function formatInt(val) {
-    for(let n = val.length - 3; n > 0; n-=3) {
-      val = val.substr(0,n) + SEP + val.substr(n);
+    for (let n = val.length - 3; n > 0; n -= 3) {
+      val = val.substr(0, n) + SEP + val.substr(n);
     }
     return val;
   }
@@ -66,9 +69,13 @@ function number(floor, val){
  * @return {string}
  */
 function getEnd(val, end1, end2, end3, info) {
-  let args = [];
+  const args = [];
   while (args.length < 5) {
-    args.unshift(arguments.length > args.length ? arguments[arguments.length - args.length - 1] : '');
+    args.unshift(
+      arguments.length > args.length
+        ? arguments[arguments.length - args.length - 1]
+        : ""
+    );
   }
 
   return _getEnd(args[0] || 0, args.slice(1, 4));
@@ -80,7 +87,7 @@ function getEnd(val, end1, end2, end3, info) {
  * @return {string}
  */
 function percentage(val) {
-  return parseFloat(val) * 100 + '%';
+  return `${parseFloat(val) * 100}%`;
 }
 
 /**
@@ -88,7 +95,7 @@ function percentage(val) {
  * @param val
  */
 function json(val) {
-  return JSON.stringify(val, null, '  ');
+  return JSON.stringify(val, null, "  ");
 }
 
 /**
@@ -99,13 +106,15 @@ function json(val) {
  * @return {*}
  */
 function initName(name, options) {
-  let regex = /\s|<br\/?>/g;
+  const regex = /\s|<br\/?>/g;
   let index = 0;
-  let name2 = name.replace(regex, function (str) {
+  const name2 = name.replace(regex, function(str) {
     index++;
-    switch (str){
-      case ' ': return index === 2 ? '&nbsp;' : str;
-      case '\n': return '<br>';
+    switch (str) {
+      case " ":
+        return index === 2 ? "&nbsp;" : str;
+      case "\n":
+        return "<br>";
     }
   });
 
@@ -113,29 +122,78 @@ function initName(name, options) {
 }
 
 /**
+ * Нормализует параметры для хэлперов, которые могут использоваться как блочные
+ * или как обычные
+ */
+function bothBlockAndSimpleNormalize(fn) {
+  return (str, options) => {
+    if (typeof options === "undefined") {
+      options = str;
+      str = options.fn(this);
+    }
+    return fn(str, options);
+  }
+}
+
+/**
  * Текст с переносами строк (\n) преобразует в html параграфы (тег P)
- * @param options
+ * @param [str] {string}
+ * @param options {object}
+ * @param options.fn {function}
  * @return {string}
  */
-function p(options) {
-  return options.fn(this)
-    .replace(/\r/g, '')
+function p(str, options) {
+  return str
+    .replace(/\r/g, "")
     .split(/\n+/g)
-    .map(str=>`<p>${str}</p>`)
-    .join('\n');
+    .map(str => `<p>${str}</p>`)
+    .join("\n");
 }
 
+function initLinks(str, options) {
+  const url = /\b([a-z]+:\/\/|\/\/)?([^\s]+@)?([^\s]+\.[a-zа-я]{2,})\b/g;
+  const phoneNative = /(\+7|8)[-\s()\d]+/g;
+  const phoneNormal = /^(\+7|8)\d{10}$/g;
+  return str
+    .replace(url, u => a(u.indexOf("@") > 0 ? "mailto:" : "", u))
+    .replace(phoneNative, p => a("tel:", p, isPhone(p)));
+
+  function isPhone(p) {
+    const result = p.replace(/[-\s()]/g, '');
+    return phoneNormal.test(result) && result;
+  }
+
+  function a(prefix, str, val) {
+    if (val === false) {
+      return str;
+    } else {
+      return `<a href="${prefix}${val || str}" target="_blank">${str}</a>`
+    }
+  }
+}
+
+function sequence(...args) {
+  const options = args.pop();
+  return args.reduce((res, item) => {
+    return Handlebars.helpers[item].call(this, res, options);
+  }, options.fn(this));
+}
 
 function templateEngine(options) {
-  return options.fn()
-    .replace(/^\s*<template/, '<script')
-    .replace(/<\/template>\s*$/, '</script>');
+  return options
+    .fn()
+    .replace(/^\s*<template/, "<script")
+    .replace(/<\/template>\s*$/, "</script>");
 }
 
-
+/**
+ *
+ * @type {Array}
+ * @private
+ */
 
 const __switch_stack__ = [];
-function switch_switch(value,options){
+function switch_switch(value, options) {
   __switch_stack__.unshift({
     _switch_value_: value,
     _switch_break_: false
@@ -147,8 +205,11 @@ function switch_switch(value,options){
 function switch_case(...caseValues) {
   const options = caseValues.pop();
 
-  if (__switch_stack__[0]._switch_break_ || caseValues.indexOf(__switch_stack__[0]._switch_value_) === -1) {
-    return '';
+  if (
+    __switch_stack__[0]._switch_break_ ||
+    caseValues.indexOf(__switch_stack__[0]._switch_value_) === -1
+  ) {
+    return "";
   }
 
   __switch_stack__[0]._switch_break_ = options.hash.break !== false;
@@ -160,8 +221,7 @@ function switch_default(options) {
   }
 }
 
-
-/*Handlebars.registerHelper('closest', function (param, options) {
+/* Handlebars.registerHelper('closest', function (param, options) {
   let res;
   let info = options.data.root;
 
@@ -170,29 +230,56 @@ function switch_default(options) {
     info = info.$$parent;
   }
   return res;
-});*/
+}); */
 
-
-/*
 function initTypograf(Typograf) {
-  if (typeof Typograf === 'function') {
-    let typograf = new Typograf({
-      locale: ['ru', 'en-US'],
-      htmlEntity: { type: 'name' },
-      disableRule: [
-        'common/space/delRepeatN'
-      ],
-      enableRule: [
-        'common/html/nbr'
-      ]
+  if (typeof Typograf === "function") {
+    const typograf = new Typograf({
+      locale: ["ru", "en-US"],
+      htmlEntity: { type: "name" },
+      disableRule: ["common/space/delRepeatN"],
+      enableRule: ["common/html/nbr"]
     });
 
-    return function (str, options) {
+    return function(str, options) {
       // let res = typograf.execute(str.replace(/\n/g, '<br>'));
       // res = res.replace(/\n+/g, '<br>');
       // return res.split(/\n+/).map(wrap('<p>', '</p>')).join('');
-      return typograf.execute(str.replace(/\n/g, '<br>'));
+      return typograf.execute(str.replace(/\n/g, "<br>"));
     };
   }
 }
-*/
+
+
+const dateFormat = (function() {
+  const MM = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря"
+  ];
+  return {
+    dd: d => d.getDate(),
+    MM: d => MM[d.getMonth()],
+    YYYY: d => d.getFullYear()
+  }
+}());
+
+function date(...args) {
+  const obj = args.pop();
+  const d = new Date(args.shift() * 1000);
+  const tpl = args.shift();
+  if (tpl) {
+    return tpl.replace(/dd|MM|YYYY/g, $0 => dateFormat[$0](d));
+  }
+
+  return d.toLocaleDateString("ru-RU", {day: "numeric", month: "long", year: "numeric"});
+}

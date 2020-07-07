@@ -1,8 +1,0 @@
-.numerals {
-  // Константы
-  @mixin mod($mod) {
-    @include modifier("numerals", $mod){
-      @content;
-    }
-  }
-}

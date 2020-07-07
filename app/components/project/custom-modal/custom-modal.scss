@@ -6,10 +6,15 @@
       @content;
     }
   }
-  @extend %DEFAULT;
+
+  // @extend .SIMPLE-TEXT;
   position: relative;
+
+  padding: 24px;
+  width: 640px;
+
+  border: 2px solid #99856e;
   text-align: left;
-  @include option(width, 540, 344);
 
   @include modal_fullscreen(){
     width: 100%;
@@ -19,29 +24,16 @@
 
   &__close-btn {
     position: absolute;
-    right: 0;
-    top: 0;
-    @include option(width, 47);
-    @include option(height, 47);
-    @include option(padding, 16);
-    box-sizing: border-box;
+    right: -61px;
+    top: -61px;
+
     cursor: pointer;
-    transition: opacity .3s ease-in-out;
+
+    @include cross(56px, 3px, #eee2c7);
+
     @include modal_fullscreen(){
       right: 61px;
       top: 61px;
     }
-    @include MOBILE{
-      display: none;
-    }
-    @include HOVER{
-      &:hover{
-        opacity: 0.8;
-      }
-    }
-  }
-
-  &__close-btn-icon {
-    @include cross(100%, 2px, $BLACK);
   }
 }

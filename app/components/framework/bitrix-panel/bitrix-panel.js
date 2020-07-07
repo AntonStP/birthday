@@ -1,25 +1,19 @@
-import {registerPlugins} from '../../framework/jquery/plugins/plugins.js';
+/* eslint-disable */
+import { registerPlugins } from "../jquery/plugins/plugins.js";
 
+class BitrixPanel {
+  constructor($element) {}
 
-class BitrixPanel{
-  constructor($element) {
-
-  }
-
-  init(action, ...args){
-    if (action && typeof this[action] === 'function') {
+  init(action, ...args) {
+    if (action && typeof this[action] === "function") {
       return this[action].apply(this, args);
     }
-  };
-
-  destroy(){
-
   }
+
+  destroy() {}
 }
-registerPlugins(
-  {
-    "name": "bitrixPanel",
-    "Constructor": BitrixPanel,
-    "selector": ".bitrix-panel"
-  }
-);
+registerPlugins({
+  name: "bitrixPanel",
+  Constructor: BitrixPanel,
+  selector: ".bitrix-panel"
+});

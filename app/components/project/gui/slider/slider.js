@@ -1,97 +1,97 @@
-(function (factory) {
-  if (typeof exports === 'object') {
+/* eslint-disable */
+(function(factory) {
+  if (typeof exports === "object") {
     module.exports = factory(
-      require('jquery'),
-      require('../../framework/jquery/plugins/plugins.js')
+      require("jquery"),
+      require("../../framework/jquery/plugins/plugins.js")
     );
   } else {
     factory(jQuery, peppers.plugins);
   }
-}(function ($, plugins) {
-  plugins.registerPlugins(
-    {
-      "name": "slider",
-      "Constructor": Slider,
-      "selector": ".slider"
-    }
-  );
+})(function($, plugins) {
+  plugins.registerPlugins({
+    name: "slider",
+    Constructor: Slider,
+    selector: ".slider"
+  });
 
   function Slider($element) {
-    var $dragging;
-    var events = {
-      "touchstart": {
-        "move": "touchmove",
-        "up": "touchend"
+    let $dragging;
+    const events = {
+      touchstart: {
+        move: "touchmove",
+        up: "touchend"
       },
-      "mousedown": {
-        "move": "mousemove",
-        "up": "mouseup"
+      mousedown: {
+        move: "mousemove",
+        up: "mouseup"
       }
     };
-    var isSelect = $element.is(".slider_select");
+    const isSelect = $element.is(".slider_select");
     if (isSelect) {
       var customValRange;
       initCustomValRange();
     }
 
-    var $bar = $element.find(".slider__bar");
-    var $controls = $element.find(".slider__controls");
-    var $text = $element.find(".slider__line-text")
-      .keypress(function(e){
+    const $bar = $element.find(".slider__bar");
+    const $controls = $element.find(".slider__controls");
+    const $text = $element
+      .find(".slider__line-text")
+      .keypress(function(e) {
         return e.which !== 13 && /^[\d., ]$/.test(e.key);
       })
       .on("blur keyup", onChange);
 
-    var value = {left: 0, right: 0};
+    const value = { left: 0, right: 0 };
     // var minVal = 0, maxVal = 100, step = 25;
 
-    var _data = $element.data();
-    var totalRange = {
+    const _data = $element.data();
+    const totalRange = {
       min: getData(_data, "min", 0),
       max: getData(_data, "max", 100)
     };
-    totalRange.step = getData(_data, "step", 1);//(totalRange.max - totalRange.min) / 10);
-    totalRange.min = Math.ceil(totalRange.min / totalRange.step) * totalRange.step;
-    totalRange.max = Math.floor(totalRange.max / totalRange.step) * totalRange.step;
+    totalRange.step = getData(_data, "step", 1); // (totalRange.max - totalRange.min) / 10);
+    totalRange.min =
+      Math.ceil(totalRange.min / totalRange.step) * totalRange.step;
+    totalRange.max =
+      Math.floor(totalRange.max / totalRange.step) * totalRange.step;
 
-    var MLN = 1000000;
-    var precision, multiplier = 1;
+    const MLN = 1000000;
+    let precision;
+    let multiplier = 1;
     if (totalRange.max > MLN) {
       precision = 3;
       multiplier = MLN;
     }
 
-    var currentRange = {min: totalRange.min, max: totalRange.max};
+    const currentRange = { min: totalRange.min, max: totalRange.max };
     update(0);
 
-    this.init = function(params, val){
+    this.init = function(params, val) {
       if (["destroy", "dispose"].indexOf(params) >= 0) {
         destroy();
         return;
       }
       switch (params) {
-        case 'init':
+        case "init":
           setValue(val);
           updateViewVal();
           updatePosition();
           updateView(0);
           break;
-        case 'reset':
+        case "reset":
           reset();
           break;
-        case 'test':
+        case "test":
           return test(val);
-        case 'get':
+        case "get":
           return getRange();
       }
     };
 
     $element.find(".slider__control").each(initControl);
 
-    function destroy(){
-
-    }
-
+    function destroy() {}
 
     function reset() {
       setValue(totalRange);
@@ -100,7 +100,11 @@
       updateView(0);
     }
     function test(val) {
-      return val === '' || val > currentRange.min - totalRange.step  && val < currentRange.max + totalRange.step;
+      return (
+        val === "" ||
+        (val > currentRange.min - totalRange.step &&
+          val < currentRange.max + totalRange.step)
+      );
     }
     function getData(_data, name, def) {
       return _data.hasOwnProperty(name) ? _data[name] : def;
@@ -119,9 +123,12 @@
       }
 
       $dragging = $(this);
-      var startPos = getPosition(event);
-      var isRight = $dragging.is(".slider__control_right");
-      var _startVal, _maxVal, _cssProp, _dir;
+      const startPos = getPosition(event);
+      const isRight = $dragging.is(".slider__control_right");
+      let _startVal;
+      let _maxVal;
+      let _cssProp;
+      let _dir;
       if (isRight) {
         _startVal = value.right;
         _maxVal = 1 - value.left;
@@ -135,14 +142,17 @@
       }
 
       $(document.documentElement)
-        .on(events[event.type].move + ".slider", onMove)
-        .on(events[event.type].up + ".slider", onStop);
-
+        .on(`${events[event.type].move}.slider`, onMove)
+        .on(`${events[event.type].up}.slider`, onStop);
 
       function onMove(event) {
-        var currentPos = getPosition(event);
-        var delta = (currentPos.left - startPos.left)/ $controls.outerWidth();
-        value[_cssProp] = Math.max(0, Math.min(_maxVal, _startVal + _dir * delta));
+        const currentPos = getPosition(event);
+        const delta =
+          (currentPos.left - startPos.left) / $controls.outerWidth();
+        value[_cssProp] = Math.max(
+          0,
+          Math.min(_maxVal, _startVal + _dir * delta)
+        );
 
         update(0);
       }
@@ -163,10 +173,8 @@
 
         change();
       } else {
-
       }
     }
-
 
     function change() {
       clipValue();
@@ -182,21 +190,27 @@
       updateView(duration);
     }
     function updateView(duration) {
-      $bar
-        .stop()
-        .animate({
-          "left": value.left * 100 + "%",
-          "right": value.right * 100 + "%"
-        }, typeof duration === "undefined" ? 300 : duration);
+      $bar.stop().animate(
+        {
+          left: `${value.left * 100}%`,
+          right: `${value.right * 100}%`
+        },
+        typeof duration === "undefined" ? 300 : duration
+      );
     }
-
 
     function setValue(val) {
-      currentRange.min = Math.max(totalRange.min, Math.min(totalRange.max, val.min));
-      currentRange.max = Math.max(currentRange.min, Math.min(totalRange.max, val.max));
+      currentRange.min = Math.max(
+        totalRange.min,
+        Math.min(totalRange.max, val.min)
+      );
+      currentRange.max = Math.max(
+        currentRange.min,
+        Math.min(totalRange.max, val.max)
+      );
     }
     function updateViewVal() {
-      if (!isSelect){
+      if (!isSelect) {
         $text.first().text(formatOutput(currentRange.min));
         $text.last().text(formatOutput(currentRange.max));
       } else {
@@ -208,7 +222,7 @@
      * По значениям минимума и максимума выставляет контроллы
      */
     function updatePosition() {
-      //TODO магнититься к реальным точкам
+      // TODO магнититься к реальным точкам
       value.left = value2percentage(currentRange.min);
       value.right = 1 - value2percentage(currentRange.max);
     }
@@ -221,19 +235,29 @@
       currentRange.max = getMax();
       updateViewVal();
 
-
       function getMax() {
-        return clip(totalRange.max - (totalRange.max - totalRange.min) * (1 - calcValue(1 - value.right)));
+        return clip(
+          totalRange.max -
+            (totalRange.max - totalRange.min) * (1 - calcValue(1 - value.right))
+        );
       }
       function getMin() {
-        return clip(totalRange.min + (totalRange.max - totalRange.min) * calcValue(value.left));
+        return clip(
+          totalRange.min +
+            (totalRange.max - totalRange.min) * calcValue(value.left)
+        );
       }
 
       function calcValue(val) {
         if (isSelect) {
-          for (var i = 0; i < customValRange.length - 1; i++) {
+          for (let i = 0; i < customValRange.length - 1; i++) {
             if (val < customValRange[i + 1]) {
-              return (i + (val - customValRange[i]) / (customValRange[i+1] - customValRange[i])) / (customValRange.length - 1);
+              return (
+                (i +
+                  (val - customValRange[i]) /
+                    (customValRange[i + 1] - customValRange[i])) /
+                (customValRange.length - 1)
+              );
             }
           }
         }
@@ -242,23 +266,25 @@
     }
 
     function formatOutput(val) {
-      val = val / multiplier;
+      val /= multiplier;
       return precision ? val.toFixed(precision).replace(".", ", ") : val;
     }
-    function parseInput(val){
+    function parseInput(val) {
       if (val) {
-        val = ("" + val).replace(/\s/g, "").replace(/,/, ".");
+        val = `${val}`.replace(/\s/g, "").replace(/,/, ".");
       }
       return parseFloat(val) * multiplier || 0;
     }
     function value2percentage(val) {
-      var _percent = (val - totalRange.min) / (totalRange.max - totalRange.min);
+      let _percent = (val - totalRange.min) / (totalRange.max - totalRange.min);
       if (isSelect) {
-        var i = (customValRange.length - 1) * _percent;
-        var i1 = Math.floor(i);
-        var i2 = Math.ceil(i);
+        const i = (customValRange.length - 1) * _percent;
+        const i1 = Math.floor(i);
+        const i2 = Math.ceil(i);
 
-        _percent = customValRange[i1] + (customValRange[i2] - customValRange[i1]) * (i - i1);
+        _percent =
+          customValRange[i1] +
+          (customValRange[i2] - customValRange[i1]) * (i - i1);
       }
 
       return _percent;
@@ -273,15 +299,21 @@
 
       function clipPercentage(val, maxVal, minVal) {
         if (isSelect) {
-          for (var i = 0; i < customValRange.length - 1; i++) {
+          for (let i = 0; i < customValRange.length - 1; i++) {
             if (val < customValRange[i + 1]) {
-              return customValRange[i + 1] - val > val - customValRange[i] ? customValRange[i] : customValRange[i + 1];
+              return customValRange[i + 1] - val > val - customValRange[i]
+                ? customValRange[i]
+                : customValRange[i + 1];
             }
           }
         }
 
-        var step = Math.round((totalRange.max - totalRange.min) / totalRange.step);
-        return Math.round(Math.max(minVal, Math.min(maxVal, val)) * step) / step;
+        const step = Math.round(
+          (totalRange.max - totalRange.min) / totalRange.step
+        );
+        return (
+          Math.round(Math.max(minVal, Math.min(maxVal, val)) * step) / step
+        );
       }
     }
 
@@ -289,25 +321,24 @@
       return Math.round(val / totalRange.step) * totalRange.step;
     }
 
-
     function getPosition(event) {
       if (typeof event.offsetX !== "undefined") {
         var pos = {
           left: event.clientX,
           top: event.clientY
-        }
+        };
       } else if (/^touch/.test(event.type)) {
         pos = {
           left: event.originalEvent.touches[0].clientX,
           top: event.originalEvent.touches[0].clientY
-        }
+        };
       }
 
       if (pos) {
-        var offset = $controls.offset();
+        const offset = $controls.offset();
         pos.left -= offset.left;
         pos.top -= offset.top;
-        return pos
+        return pos;
       }
 
       return { left: 0, top: 0 };
@@ -317,22 +348,24 @@
       $dragging = undefined;
     }
 
-
     function initCustomValRange() {
       $(window).on("resize", onResize);
       onResize();
 
       function onResize() {
-        var list = [];
-        var $parent = $element.find(".slider__control-number");
-        var w = $parent.width();
-        var $blocks = $parent.children();
-        $blocks
-          .each(function (i) {
-            list.push(($(this).position().left + i / ($blocks.length - 1) * $(this).width()) / w);
-          });
+        const list = [];
+        const $parent = $element.find(".slider__control-number");
+        const w = $parent.width();
+        const $blocks = $parent.children();
+        $blocks.each(function(i) {
+          list.push(
+            ($(this).position().left +
+              (i / ($blocks.length - 1)) * $(this).width()) /
+              w
+          );
+        });
         customValRange = list;
       }
     }
   }
-}));
+});

@@ -16,12 +16,15 @@ block functions
     }
 
 block mixins
-  mixin stylesheet(href)
-    link(rel="stylesheet" href=ASSET_PREFIX+base_url(href))
-    noscript
-      link(rel="preload" href=ASSET_PREFIX+base_url(href) as="style" onload="this.onload=null;this.rel='stylesheet'")
+  mixin stylesheet(href, async)
+    if async
+      link(rel="preload" href=base_url(href) as="style" onload="this.onload=null;this.rel='stylesheet'")
+      noscript
+        link(rel="stylesheet" href=base_url(href))
+    else
+      link(rel="stylesheet" href=base_url(href))
   mixin script(src)
-    script(src=src defer)&attributes(attributes)
+    script(src=base_url(src) defer)&attributes(attributes)
 
 
 if isBitrix() && !isBitrixHeader && !isBitrixFooter
@@ -62,12 +65,11 @@ else if !isBitrixFooter
 
       block meta
         meta(charset="utf-8")
-        meta(name="description" content=copyright.og.description)
+        meta(name="description" content=META_DESCRIPTION)
         block viewport-meta
           meta(name="viewport" content=metaViewport || "width=device-width")
         meta(name="mobile-web-app-capable" content="yes")
-        meta(http-equiv="X-UA-Compatible" content="IE=edge, chrome=1")
-        meta(name="format-detection" content="telephone=no")
+        meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
 
         meta(name="apple-mobile-web-app-capable" content="yes")
         meta(name="apple-mobile-web-app-status-bar-style" content="black")
@@ -76,7 +78,7 @@ else if !isBitrixFooter
 
       block favicon
         link(rel="apple-touch-icon" href="apple-touch-icon.png")
-        link(rel="icon" href=ASSET_PREFIX+base_url("favicon.ico"))
+        link(rel="icon" href=base_url("/favicon.ico"))
 
       block fonts
         +stylesheet("fonts/fonts.css")

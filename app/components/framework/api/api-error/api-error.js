@@ -1,5 +1,6 @@
-export class ApiError{
-  static PREVENT = 'prevent';
+/* eslint-disable */
+export class ApiError {
+  static PREVENT = "prevent";
 
   /**
    * Ошибка верификации данных
@@ -32,24 +33,31 @@ export class ApiError{
   static SERVER_ERROR = "SERVER_ERROR";
 
   /**
-   * @param {number|string} [code] - код ошибки
-   * @param {{}|{name:string, message:string}[]} [fields] - список ошибок в конкретном поле
-   * @param {string|{title:string, body:string}} [message] - общее сообщение
-   * @param {string} [response] - необработанный ответ от сервера
+   * @param {*} [params] - params
+   * @param {number|string?} [params.code?] - код ошибки
+   * @param {{}|{name:string, message:string}[]?} [params.fields] - список ошибок в конкретном поле
+   * @param {string|{title:string, body:string}?} [params.message] - общее сообщение
+   * @param {string?} [params.response] - необработанный ответ от сервера
    */
-  constructor({code, fields, message, response}) {
+  constructor({ errors, code, fields, message, response }) {
     this.code = code;
     this.fields = fields;
     this.message = message;
     this.response = response;
-    this.errors = {};
+    this.errors = errors || {};
     this.errorsCount = 0;
   }
 
+  static fromApiResponse(info) {
+    const data = info && info.data;
+    const { errors, status, message, name } = data || {};
 
-
-  static fromApiResponse(response) {
-    return response.hasOwnProperty('errors') ? new ApiError(response.errors) : false;
+    return new ApiError({
+      code: name,
+      errors: errors || message,
+      fields: message,
+      message: (message && message["-"]) || name
+    });
   }
 
   static fromHttpError(xhr) {
@@ -57,25 +65,22 @@ export class ApiError{
       code: xhr.status,
       message: xhr.statusText,
       response: xhr.responseText
-    })
+    });
   }
-
-
 
   isError() {
     return this.errorsCount > 0;
-  };
-
+  }
 
   addErrorMessage(label, message) {
-    if (message){
+    if (message) {
       if (!Array.isArray(message)) {
         message = [message];
       }
 
       if (message.length > 0) {
         this.errors[label] = (this.errors[label] || []).concat(message);
-        this.errorsCount+= message.length;
+        this.errorsCount += message.length;
       }
     }
   }
@@ -84,8 +89,10 @@ export class ApiError{
    * @param {Object} error
    */
   extend(error) {
-    if (error.errors){
-      Object.keys(error.errors).forEach(key=>this.addErrorMessage(key, error.errors[key]));
+    if (error.errors) {
+      Object.keys(error.errors).forEach(key =>
+        this.addErrorMessage(key, error.errors[key])
+      );
     }
   }
 }

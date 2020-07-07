@@ -2,46 +2,10 @@
  * Обычный текст
  */
 %DEFAULT {
-  font-family: $BASE-FONT;
+  font-family: $Arial;
   font-size: 18px;
   color: #000000;
   @include MOBILE {
     font-size: 20px;
-  }
-}
-%H1{
-  @include option(font-size, 75, 42);
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-%H2{
-  font-weight: normal;
-  @include option(font-size, 40, 31);
-  line-height: 1.2;
-}
-/**
- *
- */
-%FOOTER-TEXT {
-  font-family: $FOOTER-FONT;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.5);
-  @include option(font-size, 12);
-}
-
-/**
- *
- */
-%SOCIAL-BLOCK-TITLE{
-  @include option(font-size, 19, 19);
-}
-/**
- *
- */
-%LINK{
-  @include option(font-size, 19, 18.33);
-  @include MOBILE{
-    line-height: 1.2;
   }
 }

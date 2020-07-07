@@ -1,16 +1,9 @@
-extends no-analytics
-
-block head_before
-  include ../app/components/project/analytics/gtm.html
+extends components/project/custom-page/custom-page
 
 
-block body_before
-  include ../app/components/project/analytics/gtm-body.html
-  include ../app/components/project/analytics/gtm-ua.html
-  include components/project/analytics/ym.html
-  //-include components/project/analytics/mts.html
+prepend title
+  -let title = projectDescription;
 
-
-append scripts
-  include components/project/analytics/rutarget/15sec.html
-
+block content
+  p(style='text-align:center;')
+    a(href='example.html') Посмотреть пример (что бы удалить пример выполните #[i: b node scripts/remove-example] или #[i: b _remove-example.bat])

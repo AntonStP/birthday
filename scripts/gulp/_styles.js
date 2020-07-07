@@ -47,9 +47,7 @@ function styles() {
       .pipe(browserSync.stream());
   } else {
     bundle = bundle
-      .pipe(autoprefixer({
-        browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']
-      }))
+      .pipe(autoprefixer())
       .pipe(gulp.dest( CONFIG.getDestination('styles') ) );
   }
 

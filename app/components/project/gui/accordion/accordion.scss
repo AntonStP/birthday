@@ -17,210 +17,39 @@
     }
   }
 
+
+
   display: block;
-  user-select: none;
 
   &__item {
     display: block;
-    line-height: 1.1;
-
-    $fz-l: 18px;
-    $fz-p: 18px;
-    $m-l: 0 0 24px;
-    $m-p: 0 0 7px;
-    @include DESKTOP{
-      font-size: vh($fz-l*1.5);
-      margin: vh(0 0 24px*1.2);
-    }
-    @include TABLET-L{
-      font-size: vw($fz-l);
-      margin: vw($m-l);
-    }
-    @include TABLET{
-      font-size: vw-t($fz-p);
-      margin: vw-t($m-p);
-    }
-    @include MOBILE{
-      font-size: vw-m($fz-p);
-      margin: vw-m($m-p);
-    }
   }
 
   &__item-input {
     display: none;
   }
-
   &__item-head {
-    //font-family: $Roboto;
-    position: relative;
     display: block;
-    font-weight: 500;
-    background: #FFFCEB;
-    transition: background .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-    letter-spacing: 0.025em;
-    $p-l: 21px 29px;
-    $p-p: 0px 40px 0 16px;
-    $h-p: 75.37px;
+    padding: 1em;
 
-    @include DESKTOP{
-      padding: vh(21px*1.2 29px*1.2);
-    }
-    @include TABLET-L{
-      padding: vw($p-l) ;
-    }
-    @include TABLET{
-      height: vw-t($h-p);
-      padding: vw-t($p-p) ;
-    }
-    @include MOBILE{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      box-sizing: border-box;
-      height: vw-m($h-p);
-      padding: vw-m($p-p);
-    }
+    border: 1px solid darken(#cccccc, 20%);
+    background: #cccccc;
 
     cursor: pointer;
-
-    &:after{
-      //font-family: $PTS;
-      content: '−';
-      clear: both;
-      display: block;
-      position: absolute;
-      top: 30%;
-      font-weight: bold;
-      font-size: 1.2em;
-      right: 12px;
-      transform: rotate(0deg);
-      transition: transform .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-      color: #A30101;
-      $r-l: 30px;
-      @include DESKTOP{
-        right: vh($r-l*1.2);
-      }
-      @include TABLET-L{
-        right: vw($r-l);
-      }
-      @include MOBILE{
-        top: 35%;
-        right: vw-m(12px);
-      }
-      @include TABLET{
-        right: vw-t(12px);
-      }
-    }
-
-    @include not-checked(){
-      background: #FFE24B;
-      &:after{
-        color: $BLACK;
-        content: "+";
-        transform: rotate(-90deg);
-        @include MOBILE{
-          opacity: 0.5;
-        }
-      }
-    }
   }
   &__item-body {
-    color: #7C7C7C;
-    $fz-l: 16px;
-    $lh-l: 21px;
-    font-weight: 100;
-
-    $p-l: 8px 90px 22px 72.54px;
-    $p-p: 0 13px 12px 16px;
-    @include DESKTOP{
-      padding: vh(8px*1.5 90px*1.2 22px*1.5 72.54px*1.2);
-      font-size: vh($fz-l*1.5);
-      line-height: vh($lh-l*1.5);
-    }
-    @include TABLET-L{
-      padding: vw($p-l) ;
-      font-size: vw($fz-l);
-      line-height: vw($lh-l);
-    }
-    @include TABLET{
-      padding: vw-t($p-p) ;
-      font-size: vw-t($fz-l);
-      line-height: vw-t($lh-l);
-    }
-    @include MOBILE{
-      padding: vw-m($p-p) ;
-      font-size: vw-m($fz-l);
-      line-height: vw-m($lh-l);
-    }
-
-    p{
-      margin-top: 0;
-    }
-
-    ul{
-      padding: 0;
-      margin: 0;
-      list-style: none;
-    }
-
-    li{
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      position: relative;
-      @include DESKTOP{
-        margin-bottom: vh(11px*1.2);
-      }
-      @include TABLET-L{
-        margin-bottom: vw(11px);
-      }
-      @include TABLET{
-        margin-bottom: vw-t(11px);
-      }
-      @include MOBILE{
-        margin-bottom: vw-m(11px);
-      }
-      &:before{
-        content: '';
-        clear: both;
-        display: inline-block;
-        vertical-align: top;
-        background: image("faq-block/point.svg") no-repeat center / 100% 100%;
-        @include DESKTOP{
-          flex: 0 0 vh(13px*1.2);
-          width: vh(13px*1.2);
-          height: vh(14px*1.2);
-          margin: 0.5% vh(10.99px*1.2) 0 0;
-        }
-        @include TABLET-L{
-          flex: 0 0 vw(13px);
-          width: vw(13px);
-          height: vw(14px);
-          margin: 0.5% vw(10.99px) 0 0;
-        }
-        @include TABLET{
-          flex: 0 0 vw-t(12px);
-          width: vw-t(12px);
-          height: vw-t(14px);
-          margin: 1.5% vw-t(10px) 0 0;
-        }
-        @include MOBILE{
-          flex: 0 0 vw-m(12px);
-          width: vw-m(12px);
-          height: vw-m(14px);
-          margin: 1.5% vw-m(10px) 0 0;
-        }
-      }
-    }
-
+    //display: none;
+    padding: 2em;
+    background: rgba(#000000, 0.05);
   }
-
-
   &__item-collapse {
     overflow: hidden;
-    background: #FFFCEB;
+    transition: height 0s ease-out 0.01s;
 
+
+    /*@include checked(){
+      height: auto;
+    }*/
     @include not-checked(){
       height: 0;
     }

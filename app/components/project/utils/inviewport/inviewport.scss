@@ -1,8 +1,0 @@
-.inviewport {
-  // Константы
-  @mixin mod($mod) {
-    @include modifier("inviewport", $mod){
-      @content;
-    }
-  }
-}

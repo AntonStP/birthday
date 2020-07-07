@@ -1,60 +1,118 @@
-import $ from 'jquery';
-import {ApiError} from '../api-error/api-error';
+/* eslint-disable */
+import $ from "jquery";
+import { ApiError } from "../api-error/api-error";
 
+/**
+ * Отправка данных на сервер в виде JSON, а не url
+ * @param {{}} params
+ * @param {*} data
+ * @return {*}
+ */
+const JSON_REQUEST_FORMAT = (params, data) => {
+  params.contentType = "application/json; charset=utf-8";
+  params.data = JSON.stringify(data);
+  params.dataType = "json";
+  return params;
+};
 
-class ApiRequest{
-  constructor(api_method, data, requestMethod) {
-    let def = new $.Deferred();
-    $.ajax(api_method, {
-      method: requestMethod,
-      // contentType: 'application/json; charset=utf-8',
-      // data: JSON.stringify($.extend({}, params, _params)),
-      data: data,
-      // dataType: 'json' // Отправка данных на сервер в виде JSON, а не url
-    })
-      .done(response=>{
-        let errors = ApiRequest.getResponseErrors(response);
-        if (errors) {
-          def.reject((errors));
-        } else {
-          def.resolve(response);
-        }
-      })
-      .fail(function (xhr) {
-        let error = xhr.responseJSON
-          ? ApiRequest.getResponseErrors(xhr.responseJSON)
-          : ApiError.fromHttpError(xhr);
-        def.reject(error);
-      });
+let globalHeaders = {};
 
-    this.promise = def.promise();
+/**
+ *
+ * @param {{}} params
+ * @param {*} data
+ * @return {*}
+ */
+const FORMDATA_REQUEST_FORMAT = (params, data) => {
+  params.data = data;
+  return params;
+};
+
+const requestFormat = FORMDATA_REQUEST_FORMAT;
+const DEBUG = false;
+const DEFAULT_REQUEST_METHOD = "POST";
+
+function apiRequest(api_method, data, requestMethod) {
+  return $.ajax(
+    api_method,
+    requestFormat(
+      {
+        method: requestMethod,
+        headers: globalHeaders
+      },
+      data
+    )
+  ).then(onStatus200, onStatusError);
+
+  function onStatus200(response) {
+    if (response.success === true && !(response.data && response.data.errors)) {
+      response.data["$method"] = api_method;
+      return response.data;
+    }
+    throw ApiError.fromApiResponse(response);
   }
-
-  /**
-   * Проверка, что от сервера пришла ошибка
-   * @param data
-   * @return {boolean}
-   */
-  static getResponseErrors(data){
-    return ApiError.fromApiResponse(data);
+  function onStatusError(xhr) {
+    throw xhr.responseJSON
+      ? ApiError.fromApiResponse(xhr.responseJSON)
+      : ApiError.fromHttpError(xhr);
   }
 }
 
 export class Api {
-  getUrl(method) {
-    return method;
-  };
+
+  addHeader(header) {
+    globalHeaders = $.extend(globalHeaders, header);
+  }
+  
+  addAuthToken(token) {
+    globalHeaders["Authorization"] = `Bearer ${token}`;
+    
+    // $.ajaxSetup({
+    //   beforeSend: (xhr) => {
+    //     if (this._token) {
+    //       xhr.setRequestHeader("Authorization", `Bearer ${this._token}`);
+    //     }
+    //   }
+    // });
+  }
+
+  deleteHeader(...names) {
+    names.forEach(name=>delete globalHeaders[name]);
+  }
+
+  getUrl(method, debug) {
+    const prefix = (method.indexOf("api/v1") < 0 ? "/api/v1" : "") + method;
+
+    return base_url(debug ? `/_debug${prefix}.json` : prefix);
+  }
+
+  parse(response) {
+    if (response.success === true && !(response.data && response.data.errors)) {
+      return response.data;
+    }
+    throw ApiError.fromApiResponse(response);
+  }
 
   send(method, params) {
-    let self = this;
-    return (_params) => {
-
-      return new ApiRequest(
-        this.getUrl(method),
-        $.extend({}, params && params.data, _params),
-        params && params.requestMethod || 'POST',
-      ).promise;
-    }
-
+    const debug = params && params.debug || DEBUG;
+    return _params => {
+      return apiRequest(
+        this.getUrl(method, debug),
+        $.extend({}, serialize(_params), serialize(params && params.data)),
+        debug ? "GET" : (params && params.requestMethod) || DEFAULT_REQUEST_METHOD
+      );
+    };
   }
+}
+
+function serialize(params) {
+  if (Array.isArray(params)) {
+    return Object.keys(params)
+      .reduce((list, key) => {
+        const { name, value } = params[key];
+        list[name] = value;
+        return list;
+      }, {});
+  }
+  return params;
 }

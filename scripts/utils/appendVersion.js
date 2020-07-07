@@ -4,7 +4,7 @@
 
 const pkg = require('./package');
 
-module.exports = require('gulp-replace')(
+module.exports = (suffix)=>require('gulp-replace')(
   /(<\s*(?:link|script)[^>]+(?:src|href)=)(['"])((?!(https?:)?\/\/)[^'"]+\.(?:css|js))\2/g,
-  `$1$2$3?v=${pkg.getVersion()}$2`
+  `$1$2$3?v=${pkg.getVersion(suffix)}$2`
 );

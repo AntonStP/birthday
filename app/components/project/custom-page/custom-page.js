@@ -1,23 +1,19 @@
-import {registerPlugins} from '../../framework/jquery/plugins/plugins.js';
+/* eslint-disable */
+import { registerPlugins } from "../../framework/jquery/plugins/plugins.js";
 
-class CustomPage{
-  constructor($element) {
-  }
+class CustomPage {
+  constructor($element) {}
 
-  init(action, ...args){
-    if (action && typeof this[action] === 'function') {
+  init(action, ...args) {
+    if (action && typeof this[action] === "function") {
       return this[action].apply(this, args);
     }
   }
 
-  destroy(){
-
-  }
+  destroy() {}
 }
-registerPlugins(
-  {
-    "name": "customPage",
-    "Constructor": CustomPage,
-    "selector": ".custom-page"
-  }
-);
+registerPlugins({
+  name: "customPage",
+  Constructor: CustomPage,
+  selector: ".custom-page"
+});

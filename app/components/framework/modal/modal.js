@@ -1,26 +1,29 @@
 /* eslint-disable */
-import $ from 'jquery';
-import {registerPlugins} from '../jquery/plugins/plugins';
-import TemplateEngine from '../template-engine/template-engine';
-import {modal} from "tingle.js";
-import '../../project/utils/prevent-overscroll/prevent-overscroll';
+import $ from "jquery";
+import { modal } from "tingle.js";
+import { registerPlugins } from "../jquery/plugins/plugins";
+import TemplateEngine from "../template-engine/template-engine";
+import "../../project/utils/prevent-overscroll/prevent-overscroll";
+import { $window } from "../../dom";
 
-let $root = $(document.documentElement);
-let $body = $(document.body);
+const $root = $(document.documentElement);
+const $body = $(document.body);
 
+
+var scrollTopStorage = []; // store scroll positions
 
 initClick();
 
-class ModalInstance extends modal{
-  constructor(template, info){
-    let $content = $(template(info || {}));
+class ModalInstance extends modal {
+  constructor(template, info) {
+    const $content = $(template(info || {}));
 
-    let data = {
-      closeMethods: [], //overlay - закрывать по клику вне попапа, button - закрывать по клику на кнопку, escape - закрывать нажатием на Esc
+    const data = {
+      closeMethods: [], // overlay - закрывать по клику вне попапа, button - закрывать по клику на кнопку, escape - закрывать нажатием на Esc
       cssClass: ModalInstance.getModalCSSClasses($content),
-      onOpen: ()=>this.onOpen(),
-      onClose: ()=>this.onClose(),
-      beforeClose: ()=>this.beforeClose()
+      onOpen: () => this.onOpen(),
+      onClose: () => this.onClose(),
+      beforeClose: () => this.beforeClose()
     };
 
     super(data);
@@ -29,41 +32,45 @@ class ModalInstance extends modal{
 
     $(this.modal)
       .on("content:resize", this.checkOverflow.bind(this))
-      .closest('.tingle-modal')
+      .closest(".tingle-modal")
       .preventOverscroll();
 
     $content
-      .on("click", "[data-modal-close]", ()=>this.close())
-      .on("modal:close-request", ()=>this.close());
+      .on("click", "[data-modal-close]", () => this.close())
+      .on("modal:close-request", () => this.close());
 
-    this.setContent( $content.get(0) );
+    this.setContent($content.get(0));
     $body.append(this.modal);
     this.open();
 
     $content.initPlugins(info);
     $content.data("modal", this);
   }
-  static getModalCSSClasses($content){
-    let cssClass = $content.data("tingleClass");
+
+  static getModalCSSClasses($content) {
+    const cssClass = $content.data("tingleClass");
     return cssClass ? cssClass.split(" ") : [];
   }
 
-  close(){
+  close() {
     super.close();
-    // checkModal();
   }
 
-  onOpen(){}
-  onClose(){
+  onOpen() {}
+
+  onClose() {
     this.destroy();
 
     checkModal(this.modal);
+    $(window).scrollTop( scrollTopStorage.pop(), 40 ); // restore previous scroll position
+    // $(window).stop().animate({scrollTop:scrollTopStorage.pop()}, 100);
   }
-  beforeClose(){
+
+  beforeClose() {
     /**
      * @event Modal#modal:close
      */
-    let $event = $.Event("modal:close");
+    const $event = $.Event("modal:close");
     this.$content.trigger($event);
 
     if (!$event.isDefaultPrevented()) {
@@ -101,25 +108,34 @@ class ModalTemplate {
   }
 }
 
+export function isModalOpened() {
+  return $(".modal").length > 0;
+}
 
+export function showModal(selector, params) {
+  
+  const _scroll = $(window).scrollTop();
+  scrollTopStorage.push(_scroll); // store previous scroll position
 
-registerPlugins(
-  {
-    "name": "modal",
-    "Constructor": ModalTemplate,
-    "selector": false
-  }
-);
+  $(selector).modal(params);
+}
 
+registerPlugins({
+  name: "modal",
+  Constructor: ModalTemplate,
+  selector: false
+});
 
-function checkModal(modal){
-  $body.toggleClass('tingle-enabled', $(".tingle-modal").not(modal).length > 0);
+function checkModal(modal) {
+  const count = $(".tingle-modal").not(modal).length;
+  $body.toggleClass("tingle-enabled", count > 0);
+  $window.trigger("modal:count", count);
 }
 
 function initClick() {
-  $root.on("click", "[data-modal]", function (event) {
-    let modal = $(this).data("modal");
-    if(modal===undefined||modal===""){
+  $root.on("click", "[data-modal]", function(event) {
+    const modal = $(this).data("modal");
+    if (modal === undefined || modal === "") {
       return;
     }
     if (event.isDefaultPrevented()) {
@@ -127,8 +143,8 @@ function initClick() {
     }
     event.preventDefault();
 
-    let params = $(this).data("modalParams");
-    let jQuery = $;
+    const params = $(this).data("modalParams");
+    const jQuery = $;
     /**
      * Показать модальное окно в родительском окне, если страница открыта в iframe
      */

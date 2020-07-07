@@ -1,5 +1,4 @@
 @import "../../../../../node_modules/swiper/swiper";
-
 .carousel {
   // Константы
   @mixin mod($mod) {
@@ -10,68 +9,14 @@
   &__list {
     height: 100%;
   }
-
-
-  &__item{
-  }
-
-  &__btn{
-    position: absolute;
-    @include option(top,0,0);
-    @include option(bottom,0,110);
-    @include option(width, 26, 60);
-    @include option(height, 26, 60);
-    margin: auto;
-    cursor: pointer;
-    z-index: 1;
-    opacity: 1;
-    transition: opacity .3s ease-in-out;
-    @include MOBILE{
-      z-index: 5;
-    }
-
-    &.swiper-button-disabled{
-      opacity: 0.2;
-    }
-
-    &_prev{
-      left: 0;
-      background: image("winners/prev.svg") no-repeat center left / 50% auto;
-      @include MOBILE{
-        left: 5%;
-        background-image: image("winners/prev-m.svg");
-      }
-    }
-    &_next{
-      right: 0;
-      background: image("winners/next.svg") no-repeat center right / 50% auto;
-      @include MOBILE{
-        right: 5%;
-        background-image: image("winners/next-m.svg");
-      }
-    }
-  }
-
-  &__pagination{
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-
-    .swiper-pagination-bullet{
-      @include option(width, 10px);
-      @include option(height, 10px);
-      border: 1px solid $WHITE;
-      box-sizing: border-box;
-      border-radius: 50%;
-      margin: 0 5px;
-      background: rgba($WHITE,0);
-      transition: background .3s ease-in-out;
-
-      &-active{
-        background: rgba($WHITE,1);
-      }
-    }
-  }
+  //.slick-dots {
+  //  display: inline-block;
+  //  [role="presentation"] {
+  //    display: inline-block;
+  //
+  //    &.slick-active {
+  //      color: #626200;
+  //    }
+  //  }
+  //}
 }

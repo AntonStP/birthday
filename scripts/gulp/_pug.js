@@ -15,9 +15,13 @@ function pug() {
   let bundle = gulp.src(['app/*.pug', '!app/**/_*.pug', 'app/extra/**/*.pug'], {dot: true})
     .pipe(CONFIG.plumber())
     .pipe(gulpPug({
+      doctype: 'html',
       basedir: '.',
       data: _.assign({splitProperties, isTemplateEngine: 0}, DATA),
-      pretty: CONFIG.pug.pretty
+      pretty: CONFIG.pug.pretty,
+      filters: {
+        'plain-text': text => text
+      }
     }));
 
   if (CONFIG.isServe) {
@@ -26,7 +30,7 @@ function pug() {
       .pipe(require('browser-sync').stream());
   }
 
-  bundle = bundle.pipe(require('../utils/appendVersion'));
+  bundle = bundle.pipe(require('../utils/appendVersion')(CONFIG.isDev ? Date.now() : ''));
 
   bundle = bitrix.initTemplate(bundle);
 
@@ -41,7 +45,7 @@ function pug() {
       gulpIf(
         file=>/(\/|\\)extra\1/.test(file.path),
         gulp.dest('dist'),
-        gulp.dest(baseUrl('', 'dist'))
+        gulp.dest(CONFIG.getDestinationRoot())
       )
     );
 }

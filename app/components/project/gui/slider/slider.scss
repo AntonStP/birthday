@@ -31,10 +31,15 @@
       font-size: adaptive-phone(48);
       padding: 0;
     }
+    /*height: adaptive-desktop(40);
+    @include PHONE() {
+      height: adaptive-phone(50);
+    }*/
   }
 
   &__line {
     @extend %ABSOLUTE-CENTER;
+    //width: adaptive-desktop(230);
     height: 2px;
     background-color: $C-SLIDER;
 
@@ -53,9 +58,14 @@
 
   &__bar {
     @extend %ABSOLUTE-CENTER;
+    //left: 30%;
+    //right: 30%;
   }
 
   &__control{
+    //position: relative;
+    //display: inline-block;
+    //vertical-align: middle;
     cursor: pointer;
     position: absolute;
     z-index: 1;
@@ -72,15 +82,19 @@
   }
 
   &__control-icon{
+    //position: relative;
     display: block;
     vertical-align: middle;
+    //$w: adaptive-desktop(36);
     width: 1em;
     height: 1em;
     border: 1px solid $C-WHITE;
     border-radius: 50%;
     background: $C-PANEL;
     box-sizing: border-box;
+    //@include NOT-PHONE() {
     transform: translateX(-50%);
+    //}
     .slider__control_helper &{
       opacity: 0;
       border: none;
@@ -115,6 +129,8 @@
   }
 
   &__control-number{
+    //display: block;
+    //width: adaptive-desktop(120);
     text-align: center;
     user-select: none;
     width: 100%;
@@ -122,9 +138,13 @@
     justify-content: space-between;
 
     @include NOT-PHONE{
+      //position: absolute;
+      //left: -100%;
+      //right: -100%;
       margin: adaptive-desktop(10) auto 0;
     }
     @include PHONE{
+      //width :auto;
       margin-top: adaptive-phone(9);
     }
   }
@@ -145,6 +165,7 @@
 
   &__line-text{
     display: inline-block;
+    //width: 100%;
     border: none;
     background: none;
 
@@ -155,13 +176,19 @@
     text-decoration: none;
     text-align: inherit;
     @include mod(select) {
+      //width: 1em;
       white-space: nowrap;
     }
 
+    /*&::before {
+      content: attr(value);
+    }*/
   }
   &__line-signature{
     display: inline-block;
     vertical-align: middle;
+    //font-family: sans-serif;
+    //float: right;
   }
 
 }

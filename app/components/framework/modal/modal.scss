@@ -8,6 +8,8 @@
 
 .tingle {
   &-modal {
+
+    display: block;
     text-align: center;
     opacity: 0;
     transition: opacity .2s;
@@ -15,11 +17,6 @@
     pointer-events: none;
     top: 0 !important;
     z-index: $z-modal;
-    background: rgba(0,0,0,0.7);
-
-    @media (max-width:540px) {
-      display: flex;
-    }
 
     &--overflow {
       padding-top: 0;
@@ -36,7 +33,6 @@
       display: inline-block;
       height: 100%;
       vertical-align: middle;
-      backdrop-filter: none;
       @at-root .tingle-modal_fullscreen#{&} {
         display: none;
       }

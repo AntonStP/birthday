@@ -1,8 +1,0 @@
-.delayed-attr {
-  // Константы
-  @mixin mod($mod) {
-    @include modifier("delayed-attr", $mod){
-      @content;
-    }
-  }
-}

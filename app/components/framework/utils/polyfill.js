@@ -1,16 +1,14 @@
-(function (factory) {
-  factory(window)
-}(function (window) {
-
-  //array
-  (function(p){
-
+/* eslint-disable */
+(function(factory) {
+  factory(window);
+})(function(window) {
+  // array
+  (function(p) {
     extend(p, {
-      slice: slice,
-      map: map,
-      forEach: forEach
+      slice,
+      map,
+      forEach
     });
-
 
     /**
      * @param begin {number}
@@ -18,9 +16,9 @@
      * @returns {Array}
      */
     function slice(begin, end) {
-      var res = [];
-      if (typeof end == "undefined") end = this.length;
-      for (var i = begin; i <= end; i++){
+      const res = [];
+      if (typeof end === "undefined") end = this.length;
+      for (let i = begin; i <= end; i++) {
         res.push(this[i]);
       }
 
@@ -32,96 +30,106 @@
      * @returns {Array}
      */
     function map(cb) {
-      var arr = [];
-      for (var i = 0; typeof cb === "function" && i < this.length; i++){
+      const arr = [];
+      for (let i = 0; typeof cb === "function" && i < this.length; i++) {
         arr[i] = cb(this[i], i, this);
       }
 
       return arr;
     }
 
-
     /**
      * @param cb {Function}
      * @returns {forEach}
      */
     function forEach(cb) {
-      for (var i = 0; typeof cb === "function" && i < this.length; i++) {
+      for (let i = 0; typeof cb === "function" && i < this.length; i++) {
         cb(this[i]);
       }
       return this;
     }
 
-
-
-
-
-
     function extend(proto, extend) {
-      for (var p in extend) {
-        if (extend.hasOwnProperty(p) && typeof proto[p] == "undefined" ) {
-          proto[p] = extend[p]
+      for (const p in extend) {
+        if (extend.hasOwnProperty(p) && typeof proto[p] === "undefined") {
+          proto[p] = extend[p];
         }
       }
     }
   })(Array.prototype);
 
-  //console
-  (function () {
-    var log = ["log", "debug", "info", "assert", "clear", "count", "dir", "dirxml", "error", "exception", "group", "trace", "warn"];
+  // console
+  (function() {
+    const log = [
+      "log",
+      "debug",
+      "info",
+      "assert",
+      "clear",
+      "count",
+      "dir",
+      "dirxml",
+      "error",
+      "exception",
+      "group",
+      "trace",
+      "warn"
+    ];
     if (!window.console) window.console = {};
-    for (var i = 0; i < log.length; i++) {
+    for (let i = 0; i < log.length; i++) {
       if (!window.console[log[i]]) {
         window.console[log[i]] = _void;
       }
     }
 
-    function _void(){}
+    function _void() {}
   })();
 
-  //Uint8ClampedArray
-  (function(p, Array){
+  // Uint8ClampedArray
+  (function(p, Array) {
     if (p && p.slice === undefined) {
       p.slice = Array.slice;
     }
-  })(window.Uint8ClampedArray && window.Uint8ClampedArray.prototype, Array.prototype);
+  })(
+    window.Uint8ClampedArray && window.Uint8ClampedArray.prototype,
+    Array.prototype
+  );
 
-  //requestAnimationFrame
+  // requestAnimationFrame
   (function(window) {
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-      window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-      window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-        || window[vendors[x]+'CancelRequestAnimationFrame'];
+    let lastTime = 0;
+    const vendors = ["ms", "moz", "webkit", "o"];
+    for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+      window.requestAnimationFrame =
+        window[`${vendors[x]}RequestAnimationFrame`];
+      window.cancelAnimationFrame =
+        window[`${vendors[x]}CancelAnimationFrame`] ||
+        window[`${vendors[x]}CancelRequestAnimationFrame`];
     }
 
     if (!window.requestAnimationFrame) {
-      window.requestAnimationFrame = function (callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = window.setTimeout(function () {
-            callback(currTime + timeToCall);
-          },
-          timeToCall);
+      window.requestAnimationFrame = function(callback, element) {
+        const currTime = new Date().getTime();
+        const timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        const id = window.setTimeout(function() {
+          callback(currTime + timeToCall);
+        }, timeToCall);
         lastTime = currTime + timeToCall;
         return id;
       };
     }
 
-
     if (!window.cancelAnimationFrame) {
-      window.cancelAnimationFrame = function (id) {
+      window.cancelAnimationFrame = function(id) {
         clearTimeout(id);
       };
     }
-  }(window));
+  })(window);
 
-  //location
-  (function(location){
+  // location
+  (function(location) {
     if (!location.origin) {
-      location.origin = location.protocol + "//" + location.host;
+      location.origin = `${location.protocol}//${location.host}`;
     }
-  }(window.location))
-
-}));
+  })(window.location);
+});

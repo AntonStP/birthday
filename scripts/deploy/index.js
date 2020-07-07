@@ -1,137 +1,57 @@
-const yargs = require('yargs');
-const fs = require('fs');
-const _ = require('lodash');
+const gulp = require("gulp");
+const fs = require("fs");
 
-const FILES_TO_DEPLOY = 'dist/**/*';
+const getGitBranch = require("./getGitBranch");
+const getParams = require("./getParams");
+const getTasks = require("./getTasks");
 
+const DEPLOY = ["dist/**/*", { base: "dist", buffer: false }];
 
-function argv(key, _default = false){
-  return yargs.argv[key] || _default;
-}
+async function main() {
+  const branch = await getGitBranch();
+  const params = await getParams(branch);
+  const tasks = getTasks(params);
 
-function getAccess(branch){
-  if (fs.existsSync('scripts/deploy.config.json')) {
-    return require('./deploy.config.json')[branch];
-  } else {
-    return {
-      user: argv('ci-user'),
-      pass: argv('ci-pass'),
-      passphrase: argv('ci-passphrase')
-    };
-  }
-}
+  if (tasks) {
+    const _tasks = !Array.isArray(tasks) ? [tasks] : tasks;
 
-
-function getTasks(branch) {
-  switch (branch){
-    case 'dev':
-      return sb('\\\\diskstation\\web\\sb\\js\\deploy');
-
-    /*
-    case 'master':
-      return ftp('/', _.assign({
-        host: "",
-        port: 21,
-        user: "",
-        pass: "",
-        parallel: 10
-      }, getAccess(branch)));
-    */
-
-    case 'master':
-      return sftp(_.assign({
-        host: '192.168.50.119',
-        port: 10022,
-        user: '',
-        pass: '',
-        remotePath: '/web/sb/js/deploy/',
-        // key: argv("key", "\\\\diskstation\\project_mats\\security\\keys\\peppers_rsa_openssh")
-      }, getAccess(branch)));
-  }
-}
-
-function getBranch(){
-  let branch = argv('ciBranch');
-
-  if (!branch) {
-    let stdOut = require('child_process').execFileSync('git', ['branch']);
-
-    branch = /([^\s]+)\s*$/.exec(stdOut.toString());
-    branch = branch && branch[1];
-  }
-
-  return branch;
-}
-
-module.exports = function(cb){
-  let deploy = getTasks(getBranch());
-
-  if (deploy) {
-    let src = gulp.src(FILES_TO_DEPLOY, {base: 'dist', buffer: false});
-    if (!Array.isArray(deploy)) {
-      deploy = [deploy];
+    if (_tasks.length) {
+      return _tasks.reduce(
+        (src, filter) => src.pipe(filter),
+        gulp.src(...DEPLOY)
+      );
     }
-
-    return deploy.reduce(
-      (src, filter)=>src.pipe(filter),
-      src
-    );
   }
+
+  return null;
+}
+
+function saveCommitData(cb) {
+  const date = new Date();
+  const MSK = 180;
+  date.setTime(Date.now() + (MSK - date.getTimezoneOffset()) * 60 * 1000);
+  fs.appendFile(
+    "./app/deploy-log.txt",
+    `${process.env.CI_COMMIT_REF_NAME} ${process.env.CI_COMMIT_SHA} ${timestamp(date)} ${process.env.GITLAB_USER_EMAIL} \n`,
+    function onAppend(err) {
+      if (err) {
+        console.log(err);
+      }
+      cb();
+    }
+  );
+}
+
+function timestamp(date) {
+  return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  // return date.toLocaleString("ru");
+}
+
+module.exports = async function(...args) {
+  const branch = await getGitBranch();
+  return gulp.series(
+    saveCommitData,
+    branch === "master" ? "build" : `build_${branch}`,
+    main
+  )(...args);
 };
-
-
-
-
-/***
- *    ███████╗███████╗████████╗██████╗
- *    ██╔════╝██╔════╝╚══██╔══╝██╔══██╗
- *    ███████╗█████╗     ██║   ██████╔╝
- *    ╚════██║██╔══╝     ██║   ██╔═══╝
- *    ███████║██║        ██║   ██║
- *    ╚══════╝╚═╝        ╚═╝   ╚═╝
- *
- */
-
-function sftp(params){
-  return require('gulp-sftp')(params);
-}
-
-
-
-
-
-/***
- *    ███████╗████████╗██████╗
- *    ██╔════╝╚══██╔══╝██╔══██╗
- *    █████╗     ██║   ██████╔╝
- *    ██╔══╝     ██║   ██╔═══╝
- *    ██║        ██║   ██║
- *    ╚═╝        ╚═╝   ╚═╝
- *
- */
-// При отправке на diskstation по ftp неправильно обрабатывалось сообщение о несуществующем файле/папке
-function ftp(remotePath, params){
-  let conn = require('vinyl-ftp')
-    .create(params);
-
-  return [
-    conn.newer(remotePath),
-    conn.dest(remotePath)
-  ];
-}
-
-
-
-
-/***
- *    ███████╗██████╗
- *    ██╔════╝██╔══██╗
- *    ███████╗██████╔╝
- *    ╚════██║██╔══██╗
- *    ███████║██████╔╝
- *    ╚══════╝╚═════╝
- *
- */
-function sb(destination){
-  return require('gulp').dest(argv('remote', destination));
-}

@@ -34,8 +34,8 @@ function copyAssetsRoot() {
     'app/data/**/*',
     '!app/data/$**/*',
     'app/assets/**/*',
-    'app/videos/**/*'
-  ], baseUrl('', 'dist'));
+    'app/video*/**/*'
+  ], CONFIG.getDestinationRoot());
 }
 
 

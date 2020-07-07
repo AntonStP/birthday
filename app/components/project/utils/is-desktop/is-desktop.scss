@@ -13,9 +13,9 @@
   top: -9999px;
 
   @include MOBILE(){
-    background: #000000;
+    width: 1px;
   }
   @include DESKTOP(){
-    background: #ffffff;
+    width: 3px;
   }
 }

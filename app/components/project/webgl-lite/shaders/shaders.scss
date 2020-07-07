@@ -1,8 +1,0 @@
-.shaders {
-  // Константы
-  @mixin mod($mod) {
-    @include modifier("shaders", $mod){
-      @content;
-    }
-  }
-}

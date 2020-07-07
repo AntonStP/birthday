@@ -1,8 +1,0 @@
-.video-progress {
-  // Константы
-  @mixin mod($mod) {
-    @include modifier("video-progress", $mod){
-      @content;
-    }
-  }
-}

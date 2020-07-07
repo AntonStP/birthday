@@ -6,7 +6,7 @@ mixin accordion(content, params)
     block
 
 mixin accordion__item(content, params)
-  -attributes = assign({"type": "radio", "id":unique(), "name":"accordion"}, attributes);
+  -attributes = assign({"type": "checkbox", "id":unique(), "name":"accordion"}, attributes);
   -var id = content.id || attributes.id;
   input.accordion__item-input(id=id, type=attributes.type, name=attributes.name)
   .accordion__item

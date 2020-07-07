@@ -1,20 +1,20 @@
-import $ from 'jquery';
-import Handlebars from 'handlebars';
-import {registerPlugins} from '../jquery/plugins/plugins';
-import './template-engine__helpers';
+/* eslint-disable */
+import $ from "jquery";
+import Handlebars from "handlebars";
+import { registerPlugins } from "../jquery/plugins/plugins";
+import "./template-engine__helpers";
 
 export default Handlebars;
 
-
 function TemplateEngine($element) {
-  let template = Handlebars.compile($element.html());
-  this.init = function (data, params) {
+  const template = Handlebars.compile($element.html());
+  this.init = function(data, params) {
     let $result;
-    if (data){
+    if (data) {
       $result = $(template(data));
       params = $.extend({}, params || {});
 
-      if (!(add('append') || add('prepend') || add('before') || add('after'))) {
+      if (!(add("append") || add("prepend") || add("before") || add("after"))) {
         if (params.toParent) {
           $element.parent().append($result);
         } else {
@@ -34,34 +34,30 @@ function TemplateEngine($element) {
 
       let $container;
       if (params[name] !== false) {
-        if (typeof params[name] === 'function') {
+        if (typeof params[name] === "function") {
           params[name]($result);
           return true;
-        } else {
-          if (['object', 'string'].indexOf(typeof params[name]) >= 0) {
-            $container = $(params[name]);
-          } else if (params.toParent) {
-            $container = $element.parent();
-          }
+        }
+        if (["object", "string"].indexOf(typeof params[name]) >= 0) {
+          $container = $(params[name]);
+        } else if (params.toParent) {
+          $container = $element.parent();
+        }
 
-          if ($container) {
-            $container[name]($result);
-            return true;
-          }
+        if ($container) {
+          $container[name]($result);
+          return true;
         }
       } else {
         return true;
       }
       return false;
     }
-  }
+  };
 }
 
-
-registerPlugins(
-  {
-    'name': 'templateEngine',
-    'Constructor': TemplateEngine,
-    'selector': false
-  }
-);
+registerPlugins({
+  name: "templateEngine",
+  Constructor: TemplateEngine,
+  selector: false
+});

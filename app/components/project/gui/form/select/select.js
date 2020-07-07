@@ -1,17 +1,17 @@
-import $ from 'jquery';
-import {registerPlugins} from '../../../../framework/jquery/plugins/plugins.js';
-import {FormInput} from '../form-input/form-input';
+/* eslint-disable */
+import $ from "jquery";
+import { registerPlugins } from "../../../../framework/jquery/plugins/plugins.js";
+import { FormInput } from "../form-input/form-input";
 
-
-class Select extends FormInput{
+class Select extends FormInput {
   constructor($element) {
     super($element);
     this.$element = $element;
 
-    this.$wrapper = $element.find('.select__wrapper');
-    this.$label = $element.find('.select__label');
-    this.$value = $element.find('.select__value');
-    this.$toggleChecbox = $element.find('.select__toggle');
+    this.$wrapper = $element.find(".select__wrapper");
+    this.$label = $element.find(".select__label");
+    this.$value = $element.find(".select__value");
+    this.$toggleChecbox = $element.find(".select__toggle");
 
     this.initOptions();
 
@@ -19,57 +19,59 @@ class Select extends FormInput{
 
     this.initCLosingOnLabelClick();
 
-    $(document.documentElement).on('click', event=>this.onOutClick(event));
-
+    $(document.documentElement).on("click", event => this.onOutClick(event));
   }
 
-  initExpanding(){
-    let self = this;
-    this.$toggleChecbox.on('change', onExpand);
+  initExpanding() {
+    const self = this;
+    this.$toggleChecbox.on("change", onExpand);
     onExpand();
-    function onExpand(){
+    function onExpand() {
       self.$wrapper.css({
         height: self.$wrapper.children().outerHeight()
-      })
+      });
     }
   }
-  initCLosingOnLabelClick(){
-    let self = this;
-    this.$label.on('click', onLabelClick);
 
-    function onLabelClick(event){
-      if ($(event.target).is('input')){
+  initCLosingOnLabelClick() {
+    const self = this;
+    this.$label.on("click", onLabelClick);
+
+    function onLabelClick(event) {
+      if ($(event.target).is("input")) {
         event.stopImmediatePropagation();
-      } else {
-        if (self.$toggleChecbox.is(':checked')){
-          requestAnimationFrame(()=>{
-            this.setExpanded(false);
-          });
-        }
+      } else if (self.$toggleChecbox.is(":checked")) {
+        requestAnimationFrame(() => {
+          this.setExpanded(false);
+        });
       }
     }
   }
 
-  setExpanded(expanded = true){
-    if (this.$toggleChecbox.prop('checked') !== expanded) {
-      this.$toggleChecbox.prop('checked', expanded).change();
+  setExpanded(expanded = true) {
+    if (this.$toggleChecbox.prop("checked") !== expanded) {
+      this.$toggleChecbox.prop("checked", expanded).change();
     }
   }
 
-  setValue(value, label){
+  setValue(value, label) {
     this.$label.text(label);
-    this.$value.val( value ).change().trigger('input:change', {value});
+    this.$value
+      .val(value)
+      .change()
+      .trigger("input:change", { value });
   }
 
-  initOptions(){
-    let self = this;
-    this.$element.find('.select__option-select').on('change', onOptionsSelect);
+  initOptions() {
+    const self = this;
+    this.$element.find(".select__option-select").on("change", onOptionsSelect);
 
-    function onOptionsSelect(){
-      let label = $(this).closest('.select__option').find('.select__option-text').text();
-      let value = $(this).attr('value')
-        ? $(this).val()
-        : label;
+    function onOptionsSelect() {
+      const label = $(this)
+        .closest(".select__option")
+        .find(".select__option-text")
+        .text();
+      const value = $(this).attr("value") ? $(this).val() : label;
 
       self.setExpanded(false);
       self.setValue(value, label);
@@ -77,25 +79,21 @@ class Select extends FormInput{
   }
 
   onOutClick(event) {
-    if (!$.contains(this.$element.get(0), event.target)){
+    if (!$.contains(this.$element.get(0), event.target)) {
       this.setExpanded(false);
     }
   }
 
-  init(action, ...args){
-    if (action && typeof this[action] === 'function') {
+  init(action, ...args) {
+    if (action && typeof this[action] === "function") {
       return this[action].apply(this, args);
     }
-  };
-
-  destroy(){
-
   }
+
+  destroy() {}
 }
-registerPlugins(
-  {
-    "name": "select",
-    "Constructor": Select,
-    "selector": ".select"
-  }
-);
+registerPlugins({
+  name: "select",
+  Constructor: Select,
+  selector: ".select"
+});

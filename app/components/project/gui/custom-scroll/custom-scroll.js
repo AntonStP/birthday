@@ -1,29 +1,30 @@
-import $ from 'jquery';
-import {registerPlugins} from '../../../framework/jquery/plugins/plugins.js';
-import './lib/jquery.nicescroll';
+/* eslint-disable */
+import $ from "jquery";
+import { registerPlugins } from "../../../framework/jquery/plugins/plugins.js";
+import "./lib/jquery.nicescroll";
 
-
-class CustomScroll{
+class CustomScroll {
   constructor($element) {
-    let $content = $element.children('.custom-scroll__content')
-      .on('scroll', function () {
+    const $content = $element
+      .children(".custom-scroll__content")
+      .on("scroll", function() {
         if (this.scrollTop + 100 > this.scrollHeight - $(this).height()) {
-          $element.trigger('custom-scroll:total-scroll');
+          $element.trigger("custom-scroll:total-scroll");
         }
       });
     this.niceScroll = $content.niceScroll({
       autohidemode: false,
-      cursorcolor:"#c0c0c0",
-      cursorwidth:"7px",
+      cursorcolor: "#c0c0c0",
+      cursorwidth: "7px",
       cursorborder: "none",
       cursorborderradius: "7px",
-      background:"#e3e3e3",
+      background: "#e3e3e3",
       scrollspeed: 100,
       mousescrollstep: 50,
       enableobserver: false
     });
 
-    let ClsMutationObserver = false;//window.MutationObserver || window.WebKitMutationObserver || false;
+    const ClsMutationObserver = false; // window.MutationObserver || window.WebKitMutationObserver || false;
 
     if (ClsMutationObserver !== false) {
       this.observer = new ClsMutationObserver(mutations => this.update());
@@ -37,17 +38,17 @@ class CustomScroll{
     }
   }
 
-  init(action){
-    if (action && typeof this[action] === 'function') {
+  init(action) {
+    if (action && typeof this[action] === "function") {
       return this[action]();
     }
-  };
+  }
 
-  update(){
+  update() {
     this.niceScroll.onResize();
   }
 
-  destroy(){
+  destroy() {
     if (this.observer) {
       this.observer.disconnect();
       delete this.observer;
@@ -60,13 +61,11 @@ class CustomScroll{
 
   tick() {
     this.update();
-    this.raf = requestAnimationFrame(()=>this.tick());
+    this.raf = requestAnimationFrame(() => this.tick());
   }
 }
-registerPlugins(
-  {
-    "name": "customScroll",
-    "Constructor": CustomScroll,
-    "selector": ".custom-scroll"
-  }
-);
+registerPlugins({
+  name: "customScroll",
+  Constructor: CustomScroll,
+  selector: ".custom-scroll"
+});

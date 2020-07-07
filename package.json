@@ -1,7 +1,8 @@
 {
-  "name": "stoloto-big",
-  "version": "0.0.262",
-  "description": "190316 stoloto-big",
+  "name": "birthday.stoloto",
+  "version": "0.0.0",
+  "project_id": "",
+  "description": " birthday.stoloto",
   "author": "peppers",
   "private": true,
   "engines": {
@@ -22,7 +23,17 @@
     "electron:run": "electron ./dist/electron.js",
     "electron:debug": "electron ./app/electron.js --debug",
     "electron:build-n-run": "gulp build && npm run electron",
-    "electron:build": "electron-builder"
+    "electron:build": "electron-builder",
+    "test": "eslint app/components/**/*.js",
+    "eslint": "eslint app/components/**/*.js",
+    "eslint:fix": "eslint app/components/**/*.js --fix",
+    "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
   },
   "#electron": {
     "devDependencies": {
@@ -32,9 +43,9 @@
     },
     "main": "dist/electron.js",
     "build": {
-      "appId": "stoloto-big",
+      "appId": "birthday.stoloto",
       "mac": {
-        "category": "peppers.stoloto-big"
+        "category": "peppers.birthday.stoloto"
       },
       "directories": {
         "output": "release"
@@ -47,8 +58,14 @@
       "asarUnpack": "dist",
       "win": {
         "target": [
-          "dir"
-        ]
+          {
+            "target": "dir",
+            "arch": [
+              "x64"
+            ]
+          }
+        ],
+        "icon": "dist/favicon.ico"
       }
     }
   },
@@ -68,8 +85,7 @@
     "@babel/polyfill": "latest",
     "@babel/preset-env": "latest",
     "babelify": "latest",
-    "backstopjs": "latest",
-    "browser-sync": "^2.26.7",
+    "browser-sync": "latest",
     "browserify": "latest",
     "del": "latest",
     "event-stream": "latest",
@@ -88,39 +104,47 @@
     "gulp-rename": "latest",
     "gulp-replace": "latest",
     "gulp-sass": "latest",
-    "gulp-sftp": "latest",
     "gulp-sourcemaps": "latest",
     "gulp-svg-symbols": "latest",
     "gulp-uglify": "latest",
     "gulp-watch": "latest",
     "html-entities": "latest",
     "http-proxy-middleware": "latest",
-    "jstransformer-markdown-it": "latest",
     "lodash": "latest",
+    "gulp-sftp": "latest",
+    "vinyl-ftp": "latest",
+    "yargs": "latest",
+    "husky": "latest",
+    "prettier": "latest",
+    "babel-eslint": "latest",
+    "eslint-config-airbnb-base": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-prettier": "latest",
+    "jstransformer-markdown-it": "latest",
     "markdown-it-attrs": "latest",
     "markdown-it-highlight": "latest",
     "run-sequence": "latest",
     "vinyl-buffer": "latest",
-    "vinyl-ftp": "latest",
     "vinyl-source-stream": "latest",
-    "watchify": "latest",
-    "yargs": "latest"
+    "watchify": "latest"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "Firefox ESR"
+  ],
   "browserify": {
     "transform": [
       "babelify"
     ]
   },
   "dependencies": {
-    "cloud9carousel": "^2.2.0",
-    "flickity": "latest",
-    "gsap": "^2.1.2",
-    "handlebars": "^4.7.3",
-    "ismobilejs": "^0.5.1",
-    "jquery": "^3.4.0",
+    "swiper": "latest",
+    "handlebars": "latest",
+    "jquery": "latest",
     "navigo": "latest",
     "normalize.css": "latest",
-    "swiper": "^5.3.6",
-    "tingle.js": "latest"
+    "tingle.js": "^0.13.2"
   }
 }

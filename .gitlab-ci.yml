@@ -21,19 +21,23 @@ cache:
   # untracked: true
   paths:
     - node_modules/
+    - app/deploy-log.txt
 
 # before_script
 
 pep-init-build-deploy:
+  tags:
+    - frontend
   stage: build
   only:
-    - build
-    # - master
-    # - dev
+    # - build
+    - master
+    - dev
   script:
-    #- yarn || (npm install -g yarn && yarn)
-    - npm install
-    - node_modules/gulp/bin/gulp.js --gulpfile ./gulpfile.js deploy --ci-branch $CI_COMMIT_REF_NAME --ci-user $user --ci-pass $pass
+    # - git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet package-lock.json && npm ci
+    - if [ ! -d "node_modules" ] || [ "$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep package-lock.json)" ]; then npm ci; else echo "no updates"; fi
+    #- npm ci
+    - node_modules/gulp/bin/gulp.js --gulpfile ./gulpfile.js deploy
 
   artifacts:
     paths:
